@@ -24,6 +24,11 @@ SPACESHIP_ASYNC_SHOW_COUNT=false
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
+#enable vim commands
+bindkey -v
+bindkey -M viins 'jk' vi-cmd-mode
+bindkey -M viins 'kj' vi-cmd-mode
+INSERT_MODE_INDICATOR="%F{yellow}+%f"
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
@@ -101,6 +106,7 @@ alias vim="nvim"
 plugins=(
 	git
 	zsh-autosuggestions
+    vi-mode
 )
 
 
@@ -131,4 +137,4 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /home/ejago/Repos/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /home/ejago/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
