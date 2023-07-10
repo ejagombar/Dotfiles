@@ -51,6 +51,7 @@ lsp.on_attach(function(client, bufnr)
     -- lsp_format_on_save(bufnr)
     lsp.buffer_autoformat()
     lsp.default_keymaps({ buffer = bufnr })
+    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
 end)
 
 -- lsp.skip_server_setup({ 'clangd' })
