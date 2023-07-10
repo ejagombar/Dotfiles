@@ -3,8 +3,10 @@
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-GOPATH=$HOME/Repos/
+
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+
+ZSH_TMUX_AUTOSTART=true 
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -26,9 +28,8 @@ SPACESHIP_ASYNC_SHOW_COUNT=false
 
 #enable vim commands
 bindkey -v
-bindkey -M viins 'jk' vi-cmd-mode
-bindkey -M viins 'kj' vi-cmd-mode
-INSERT_MODE_INDICATOR="%F{yellow}+%f"
+export KEYTIMEOUT=1
+export VI_MODE_SET_CURSOR=true
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
@@ -107,6 +108,7 @@ plugins=(
 	git
 	zsh-autosuggestions
     vi-mode
+    tmux
 )
 
 
@@ -137,4 +139,4 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /home/ejago/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
