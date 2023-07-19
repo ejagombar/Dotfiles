@@ -43,4 +43,8 @@ return require('packer').startup(function(use)
     use('numToStr/Comment.nvim')
 
     use('nvim-lualine/lualine.nvim')
+    use({
+        "aserowy/tmux.nvim",
+        config = function() return require("tmux").setup() end
+    })
 end)
