@@ -11,4 +11,12 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 
 #Install programs
-sudo dnf install -y gh tmux zsh bat exa nvim
+sudo dnf install -y gh tmux zsh bat exa neovim
+
+#Set ZSH as default
+chsh -s $(which zsh)
+
+#Install oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
