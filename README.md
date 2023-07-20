@@ -1,5 +1,10 @@
 # Dotfiles
-My personal dotfiles
+My personal dotfiles.
+
+Configurations for:
+- Neovim
+- Tmux
+- Zsh
 
 ## TODO
 - Write install script for the required programs
@@ -9,8 +14,11 @@ My personal dotfiles
 # Cheatsheet
 
 ## ZSH Commands
-alias = shows all aliases
-rp = cd Projects/Repos
+'alias' = shows all aliases
+
+'rp' = cd Projects/Repos
+
+'q' = go to home dir and clear screen
 
 ## Tmux Commands
 

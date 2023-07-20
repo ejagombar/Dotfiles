@@ -46,8 +46,6 @@ source $ZSH/oh-my-zsh.sh
 
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
-
-# Go to the /home/$USER (~) directory and clears window of your terminal
 alias q="~ && clear"
 alias dl='cd ~/Downloads'
 alias rp='cd ~/Projects/Repos'
