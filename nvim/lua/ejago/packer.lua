@@ -18,7 +18,7 @@ return require('packer').startup(function(use)
     use('p00f/clangd_extensions.nvim')
     use('numToStr/Comment.nvim')
     use('nvim-lualine/lualine.nvim')
-    use('aserowy/tmux.nvim')
+    use('alexghergh/nvim-tmux-navigation')
 
     use {
         'VonHeikemen/lsp-zero.nvim',
