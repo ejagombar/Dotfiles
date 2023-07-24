@@ -1,7 +1,5 @@
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
+# Path to your oh-my-zsh installation. export ZSH="$HOME/.oh-my-zsh"
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin
 
 ZSH_TMUX_AUTOSTART=true 
 
@@ -18,6 +16,8 @@ SPACESHIP_ASYNC_SHOW_COUNT=false
 #enable vim commands
 bindkey -v
 export KEYTIMEOUT=1
+# https://www.reddit.com/r/vim/comments/60jl7h/zsh_vimode_no_delay_entering_normal_mode/
+bindkey -M vicmd '^[' undefined-key
 export VI_MODE_SET_CURSOR=true
 
 # disable zsh vim command mode
@@ -33,6 +33,17 @@ zstyle ':omz:update' mode reminder
 
 # stamp shown in the history command output.
 HIST_STAMPS="dd/mm/yyyy"
+
+# Better searching in command mode
+# (http://stratus3d.com/blog/2017/10/26/better-vi-mode-in-zshell/)
+bindkey -M vicmd '?' history-incremental-search-backward
+bindkey -M vicmd '/' history-incremental-search-forward
+
+# Beginning search with arrow keys
+bindkey "^[OA" up-line-or-beginning-search
+bindkey "^[OB" down-line-or-beginning-search
+bindkey -M vicmd "k" up-line-or-beginning-search
+bindkey -M vicmd "j" down-line-or-beginning-search
 
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
