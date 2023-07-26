@@ -1,4 +1,5 @@
 # Path to your oh-my-zsh installation. export ZSH="$HOME/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin
 
 ZSH_TMUX_AUTOSTART=true 
@@ -63,6 +64,7 @@ alias rp='cd ~/Projects/Repos'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias vim="nvim"
+alias v="nvim ."
 alias cat="bat"
 
 # For a full list of active aliases, run `alias`.
