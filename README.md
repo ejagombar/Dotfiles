@@ -35,9 +35,9 @@ Configurations for:
 
 ### Harpoon
 '<leader>a' = Harpoon mark file 
-'<C-E>' = Harpoon quick menu 
-'<C-Y>' = Harpoon file 1
-'<C-U>' = Harpoon file 2
-'<C-N>' = Harpoon file 3
-'<C-M>' = Harpoon file 4
+'<c-e>' = Harpoon quick menu 
+'<leader>j' = Harpoon file 1
+'<leader>k' = Harpoon file 2
+'<leader>l' = Harpoon file 3
+'<leader>;' = Harpoon file 4
 
