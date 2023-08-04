@@ -66,6 +66,7 @@ alias szrc="source ~/.zshrc"
 alias vim="nvim"
 alias v="nvim ."
 alias cat="bat"
+alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 
 # For a full list of active aliases, run `alias`.
 
