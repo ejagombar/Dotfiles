@@ -6,6 +6,9 @@ lsp.ensure_installed({
     'gopls',
     'clangd',
     'lua_ls',
+    'quick_lint_js',
+    'html',
+    'cssls',
 })
 
 -- Fix Undefined global 'vim'
