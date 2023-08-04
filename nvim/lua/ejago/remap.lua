@@ -5,8 +5,8 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
-vim.keymap.set("n", "<Leader>h", "^")
-vim.keymap.set("n", "<Leader>l", "g_")
+-- vim.keymap.set("n", "<Leader>h", "^")
+-- vim.keymap.set("n", "<Leader>l", "g_")
 
 vim.keymap.set("n", "<Leader>e", "%")
 vim.keymap.set("v", "<Leader>e", "%")
