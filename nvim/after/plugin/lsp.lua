@@ -59,6 +59,13 @@ end)
 
 -- lsp.skip_server_setup({ 'clangd' })
 
+lsp.set_sign_icons({
+    error = '✘',
+    warn = '▲',
+    hint = '⚑',
+    info = '»'
+})
+
 lsp.setup()
 
 -- require('clangd_extensions').setup()

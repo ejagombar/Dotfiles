@@ -63,8 +63,7 @@ alias dl='cd ~/Downloads'
 alias rp='cd ~/Projects/Repos'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
-alias vim="nvim"
-alias v="nvim ."
+alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
 alias cat="bat"
 alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 
