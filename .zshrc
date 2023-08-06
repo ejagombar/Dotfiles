@@ -60,7 +60,10 @@ source $ZSH/oh-my-zsh.sh
 alias sudo='sudo '
 alias q="~ && clear"
 alias dl='cd ~/Downloads'
-alias rp='cd ~/Projects/Repos'
+alias pr='cd ~/Projects/Repos'
+alias pp='cd ~/Projects/Playground'
+alias pf='cd ~/Projects/Forks'
+
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
