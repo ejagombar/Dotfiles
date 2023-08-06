@@ -8,6 +8,10 @@ return require('packer').startup(function(use)
         -- or                            , branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
+    use {
+        "nvim-telescope/telescope-file-browser.nvim",
+        requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    }
 
     use('navarasu/onedark.nvim')
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -20,6 +24,10 @@ return require('packer').startup(function(use)
     use('nvim-lualine/lualine.nvim')
     use('alexghergh/nvim-tmux-navigation')
     use('github/copilot.vim')
+    use('nvim-tree/nvim-web-devicons')
+    use('lewis6991/gitsigns.nvim')
+    use('windwp/nvim-autopairs')
+    use('windwp/nvim-ts-autotag')
 
     use {
         'VonHeikemen/lsp-zero.nvim',
