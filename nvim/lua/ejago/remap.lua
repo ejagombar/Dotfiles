@@ -15,6 +15,10 @@ vim.keymap.set("n", "cp", "+y")
 vim.keymap.set("n", "cv", "+p")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
+-- Dont put deleted items into buffer when using x
+vim.keymap.set('n', 'x', '"_x')
+vim.keymap.set('v', 'x', '"_x')
+
 -- next greatest remap ever : asbjornHaland
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
