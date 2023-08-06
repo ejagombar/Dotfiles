@@ -37,9 +37,8 @@ vim.keymap.set("n", "<leader>pv", function()
         respect_gitignore = false,
         hidden = true,
         grouped = true,
-        previewer = false,
         initial_mode = "normal",
-        layout_config = { height = 40, width = 160 }
+        -- layout_config = { height = 40, width = 160 }
         --[[  ]] })
 end)
 
@@ -50,15 +49,13 @@ telescope.setup {
             respect_gitignore = false,
             hidden = true,
             grouped = true,
-            previewer = false,
             initial_mode = "normal",
-            layout_config = { height = 40, width = 100 },
             -- disables netrw and use telescope-file-browser in its place
             hijack_netrw = true,
             mappings = {
                 ["n"] = {
-                    -- ["%"] = fb_actions.create,
-                    -- ["-"] = fb_actions.goto_parent_dir,
+                    ["%"] = fb_actions.create,
+                    ["-"] = fb_actions.goto_parent_dir,
                 },
             },
         },
