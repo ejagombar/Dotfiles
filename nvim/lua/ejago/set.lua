@@ -24,4 +24,6 @@ vim.opt.scrolloff = 8
 
 vim.opt.updatetime = 50
 
+vim.o.cursorline = true
+
 vim.opt.clipboard = "unnamedplus"

@@ -18,9 +18,9 @@ end)
 vim.keymap.set('n', '<leader>ps', function()
     builtin.live_grep()
 end)
--- vim.keymap.set('n', '<leader>ps', function()
---     telescope.grep_string({ search = vim.fn.input("Grep > ") });
--- end)
+vim.keymap.set('n', '<leader>ps', function()
+    telescope.grep_string({ search = vim.fn.input("Grep > ") });
+end)
 
 vim.keymap.set('n', '<leader>pg', function()
     builtin.git_files()
