@@ -1,10 +1,12 @@
-local lsp_status_ok, lsp = pcall(require, "lsp")
+local lsp_status_ok, lsp = pcall(require, "lsp-zero")
 if not lsp_status_ok then
+    print('lsp not found')
     return
 end
 
 local lspConfig_status_ok, lspConfig = pcall(require, "lspConfig")
-if not lspConfig_status_ok then
+if lspConfig_status_ok then
+    print('lspConfig not found')
     return
 end
 
@@ -47,24 +49,21 @@ lsp.configure('lua_ls', {
 })
 
 lsp.on_attach(function(client, bufnr)
+    if client.name == "tsserver" then
+        client.server_capabilities.document_formatting = false
+    end
+
     lsp.buffer_autoformat()
     lsp.default_keymaps({ buffer = bufnr })
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float)
 end)
 
-lspConfig.tsserver.setup({
-    capabilities = capabilities,
-    on_attach = function(client)
-        client.server_capabilities.document_formatting = false
-    end,
-})
-
-lspConfig.html.setup({
-    capabilities = capabilities,
-    on_attach = function(client)
-        client.server_capabilities.document_formatting = false
-    end,
-})
+-- lspConfig.html.setup({
+--     capabilities = capabilities,
+--     on_attach = function(client)
+--         client.server_capabilities.document_formatting = false
+--     end,
+-- })
 
 -- lsp.skip_server_setup({ 'clangd' })
 
