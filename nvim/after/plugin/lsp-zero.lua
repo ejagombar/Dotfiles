@@ -1,7 +1,18 @@
-local lsp = require('lsp-zero').preset({})
-local lspConfig = require('lspconfig')
+local lsp_status_ok, lsp = pcall(require, "lsp")
+if not lsp_status_ok then
+    return
+end
+
+local lspConfig_status_ok, lspConfig = pcall(require, "lspConfig")
+if not lspConfig_status_ok then
+    return
+end
+
 require('mason').setup()
 require('mason-lspconfig').setup()
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 lsp.preset("recommended")
 
 lsp.ensure_installed({
@@ -35,13 +46,10 @@ lsp.configure('lua_ls', {
     },
 })
 
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 lsp.on_attach(function(client, bufnr)
     lsp.buffer_autoformat()
     lsp.default_keymaps({ buffer = bufnr })
-    vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
+    vim.keymap.set('n', 'gl', vim.diagnostic.open_float)
 end)
 
 lspConfig.tsserver.setup({
@@ -68,5 +76,3 @@ lsp.set_sign_icons({
 })
 
 lsp.setup()
-
--- require('clangd_extensions').setup()
