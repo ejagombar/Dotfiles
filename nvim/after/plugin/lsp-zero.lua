@@ -1,5 +1,7 @@
 local lsp = require('lsp-zero').preset({})
-
+local lspConfig = require('lspconfig')
+require('mason').setup()
+require('mason-lspconfig').setup()
 lsp.preset("recommended")
 
 lsp.ensure_installed({
@@ -34,21 +36,7 @@ lsp.configure('lua_ls', {
 })
 
 
--- local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
--- local lsp_format_on_save = function(bufnr)
---     vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
---     vim.api.nvim_create_autocmd('BufWritePre', {
---         group = augroup,
---         buffer = bufnr,
---         callback = function()
---             vim.lsp.buf.format()
---             filter = function(client)
---                 return client.name == "null-ls"
---             end
---         end,
---     })
--- end
-
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 lsp.on_attach(function(client, bufnr)
     lsp.buffer_autoformat()
@@ -56,15 +44,19 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
 end)
 
-require('lspconfig').tsserver.setup({
-    on_init = function(client)
-        client.server_capabilities.documentFormattingProvider = false
-        client.server_capabilities.documentFormattingRangeProvider = false
+lspConfig.tsserver.setup({
+    capabilities = capabilities,
+    on_attach = function(client)
+        client.server_capabilities.document_formatting = false
     end,
 })
 
-require('mason').setup()
-require('mason-lspconfig').setup()
+lspConfig.html.setup({
+    capabilities = capabilities,
+    on_attach = function(client)
+        client.server_capabilities.document_formatting = false
+    end,
+})
 
 -- lsp.skip_server_setup({ 'clangd' })
 

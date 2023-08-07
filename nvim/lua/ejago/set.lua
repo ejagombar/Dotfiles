@@ -25,7 +25,13 @@ vim.opt.scrolloff = 8
 vim.opt.updatetime = 50
 
 vim.o.cursorline = true
-vim.cmd("highlight CursorLineNr guibg=bg guifg=#CCCCCC")
-vim.cmd("highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE")
+
+vim.cmd([[
+augroup CursorLineNrHighlight
+  autocmd!
+  autocmd VimEnter * highlight CursorLineNr guibg=bg guifg=#CCCCCC
+  autocmd VimEnter * highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+augroup END
+]])
 
 vim.opt.clipboard = "unnamedplus"

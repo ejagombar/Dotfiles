@@ -3,16 +3,6 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
-    use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.1',
-        -- or                            , branch = '0.1.x',
-        requires = { { 'nvim-lua/plenary.nvim' } }
-    }
-    use {
-        "nvim-telescope/telescope-file-browser.nvim",
-        requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
-    }
-
     use('navarasu/onedark.nvim')
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
     use('theprimeagen/harpoon')
@@ -28,6 +18,21 @@ return require('packer').startup(function(use)
     use('lewis6991/gitsigns.nvim')
     use('windwp/nvim-autopairs')
     use('windwp/nvim-ts-autotag')
+
+    use {
+        'nvim-telescope/telescope.nvim', tag = '0.1.1',
+        -- or                            , branch = '0.1.x',
+        requires = { { 'nvim-lua/plenary.nvim' } }
+    }
+    use {
+        "nvim-telescope/telescope-file-browser.nvim",
+        requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    }
+
+    use {
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = { "nvim-lua/plenary.nvim" },
+    }
 
     use {
         'VonHeikemen/lsp-zero.nvim',
