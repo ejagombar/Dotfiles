@@ -21,6 +21,14 @@ plugins=(
     tmux
 )
 
+function zvm_config() {
+  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+}
+
+(( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[path]=none
+ZSH_HIGHLIGHT_STYLES[path_prefix]=none
+
 source $ZSH/oh-my-zsh.sh
 source ~/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
