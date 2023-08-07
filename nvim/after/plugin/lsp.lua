@@ -6,7 +6,7 @@ lsp.ensure_installed({
     'gopls',
     'clangd',
     'lua_ls',
-    'quick_lint_js',
+    'tsserver',
     'html',
     'cssls',
 })
@@ -51,11 +51,20 @@ lsp.configure('lua_ls', {
 
 
 lsp.on_attach(function(client, bufnr)
-    -- lsp_format_on_save(bufnr)
     lsp.buffer_autoformat()
     lsp.default_keymaps({ buffer = bufnr })
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float, opts)
 end)
+
+require('lspconfig').tsserver.setup({
+    on_init = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentFormattingRangeProvider = false
+    end,
+})
+
+require('mason').setup()
+require('mason-lspconfig').setup()
 
 -- lsp.skip_server_setup({ 'clangd' })
 
