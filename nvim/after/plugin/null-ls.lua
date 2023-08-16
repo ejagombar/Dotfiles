@@ -17,3 +17,4 @@ null_ls.setup({
         formatting.prettierd -- .with({extra_args = { "--tab-width", 2, "--no-semi", "--single-quote" } }),
     },
 })
+-- write a function that prints out an error

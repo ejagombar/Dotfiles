@@ -13,12 +13,20 @@ return require('packer').startup(function(use)
     use('numToStr/Comment.nvim')
     use('nvim-lualine/lualine.nvim')
     use('alexghergh/nvim-tmux-navigation')
-    use('github/copilot.vim')
     use('nvim-tree/nvim-web-devicons')
     use('lewis6991/gitsigns.nvim')
     use('windwp/nvim-autopairs')
+
     use('windwp/nvim-ts-autotag')
 
+    use {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({})
+        end,
+    }
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         -- or                            , branch = '0.1.x',

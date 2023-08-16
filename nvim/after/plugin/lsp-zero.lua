@@ -4,11 +4,7 @@ if not lsp_status_ok then
     return
 end
 
-local lspConfig_status_ok, lspConfig = pcall(require, "lspConfig")
-if lspConfig_status_ok then
-    print('lspConfig not found')
-    return
-end
+local lspconfig = require('lspconfig')
 
 require('mason').setup()
 require('mason-lspconfig').setup()
@@ -58,12 +54,19 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float)
 end)
 
--- lspConfig.html.setup({
---     capabilities = capabilities,
---     on_attach = function(client)
---         client.server_capabilities.document_formatting = false
---     end,
--- })
+lspconfig.tsserver.setup({
+    capabilities = capabilities,
+    on_attach = function(client)
+        client.server_capabilities.document_formatting = false
+    end,
+})
+
+lspconfig.html.setup({
+    capabilities = capabilities,
+    on_attach = function(client)
+        client.server_capabilities.document_formatting = false
+    end,
+})
 
 -- lsp.skip_server_setup({ 'clangd' })
 
