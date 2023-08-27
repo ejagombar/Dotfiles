@@ -25,10 +25,12 @@ function zvm_config() {
   ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
 }
 
+# Remove underline from paths
 (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[path]=none
 ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 
+# Source plugins. Must be done after plugins are added
 source $ZSH/oh-my-zsh.sh
 source ~/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -39,6 +41,7 @@ alias dl='cd ~/Downloads'
 alias pr='cd ~/Projects/Repos'
 alias pp='cd ~/Projects/Playground'
 alias pf='cd ~/Projects/Forks'
+alias pj='cd ~/Projects/Job'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
