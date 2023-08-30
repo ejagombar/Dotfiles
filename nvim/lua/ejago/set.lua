@@ -15,7 +15,7 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = false
@@ -26,6 +26,9 @@ vim.opt.updatetime = 50
 
 vim.o.cursorline = true
 
+-- Autosave
+vim.api.nvim_set_keymap('i', '<C-[>', '<Esc>:update<CR>', { noremap = true, silent = true })
+
 vim.cmd([[
 augroup CursorLineNrHighlight
   autocmd!
@@ -33,5 +36,7 @@ augroup CursorLineNrHighlight
   autocmd VimEnter * highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 augroup END
 ]])
+
+
 
 vim.opt.clipboard = "unnamedplus"

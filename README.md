@@ -12,7 +12,6 @@ Configurations for:
 
 -   Allow resizing of windows wiht alt+hjkl
 -   Swap out LSP-Zero
--   Test save on entering normal mode
 -   configure fzf
 -   Properly learn tmux
 -   Learn telescope file explorer more
