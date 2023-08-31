@@ -26,8 +26,22 @@ vim.opt.updatetime = 50
 
 vim.o.cursorline = true
 
+vim.cmd([[
+  augroup AutoSaveReadGroup
+    autocmd!
+    autocmd TextChanged,TextChangedI * :lua AutoSaveRead()
+  augroup END
+]])
+
+-- Function to automatically save and read the file
+function AutoSaveRead()
+    vim.cmd("silent! write")
+    vim.cmd("checktime")
+end
+
+
 -- Autosave
-vim.api.nvim_set_keymap('i', '<C-[>', '<Esc>:update<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('i', '<Esc>', '<Esc>:update<CR>', { noremap = true, silent = true })
 
 vim.cmd([[
 augroup CursorLineNrHighlight

@@ -4,20 +4,30 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     use('navarasu/onedark.nvim')
+
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+
     use('theprimeagen/harpoon')
+
     use('mbbill/undotree')
+
     use('tpope/vim-fugitive')
-    use('theprimeagen/vim-be-good')
+
     use('p00f/clangd_extensions.nvim')
+
     use('numToStr/Comment.nvim')
+
     use('nvim-lualine/lualine.nvim')
-    use('alexghergh/nvim-tmux-navigation')
+
     use('nvim-tree/nvim-web-devicons')
+
     use('lewis6991/gitsigns.nvim')
+
     use('windwp/nvim-autopairs')
 
     use('windwp/nvim-ts-autotag')
+
+    use('serowy/tmux.nvim')
 
     use {
         "zbirenbaum/copilot.lua",
@@ -27,11 +37,13 @@ return require('packer').startup(function(use)
             require("copilot").setup({})
         end,
     }
+
     use {
         'nvim-telescope/telescope.nvim', tag = '0.1.1',
         -- or                            , branch = '0.1.x',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
+
     use {
         "nvim-telescope/telescope-file-browser.nvim",
         requires = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
