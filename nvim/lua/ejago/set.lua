@@ -26,6 +26,8 @@ vim.opt.updatetime = 50
 
 vim.o.cursorline = true
 
+vim.opt.clipboard = "unnamedplus"
+
 vim.cmd([[
   augroup AutoSaveReadGroup
     autocmd!
@@ -39,7 +41,6 @@ function AutoSaveRead()
     vim.cmd("checktime")
 end
 
-
 -- Autosave
 -- vim.api.nvim_set_keymap('i', '<Esc>', '<Esc>:update<CR>', { noremap = true, silent = true })
 
@@ -50,7 +51,3 @@ augroup CursorLineNrHighlight
   autocmd VimEnter * highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 augroup END
 ]])
-
-
-
-vim.opt.clipboard = "unnamedplus"
