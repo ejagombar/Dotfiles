@@ -2,7 +2,7 @@
 export ZSH="$HOME/.oh-my-zsh"
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin
 
-ZSH_TMUX_AUTOSTART=true 
+ZSH_TMUX_AUTOSTART=false
 
 # disable zsh vim command mode
 bindkey -a -r ':'
