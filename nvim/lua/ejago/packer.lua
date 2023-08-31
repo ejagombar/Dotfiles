@@ -27,7 +27,7 @@ return require('packer').startup(function(use)
 
     use('windwp/nvim-ts-autotag')
 
-    use('serowy/tmux.nvim')
+    use('aserowy/tmux.nvim')
 
     use {
         "zbirenbaum/copilot.lua",

@@ -3,6 +3,7 @@
 My personal dotfiles.
 
 Configurations for:
+
 -   Neovim
 -   Tmux
 -   Zsh
