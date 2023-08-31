@@ -10,7 +10,6 @@ Configurations for:
 
 ## TODO Eventually
 
--   Allow resizing of windows wiht alt+hjkl
 -   Swap out LSP-Zero
 -   configure fzf
 -   Properly learn tmux
