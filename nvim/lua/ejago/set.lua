@@ -26,8 +26,23 @@ vim.opt.updatetime = 50
 
 vim.o.cursorline = true
 
+vim.opt.clipboard = "unnamedplus"
+
+vim.cmd([[
+  augroup AutoSaveReadGroup
+    autocmd!
+    autocmd TextChanged,TextChangedI * :lua AutoSaveRead()
+  augroup END
+]])
+
+-- Function to automatically save and read the file
+function AutoSaveRead()
+    vim.cmd("silent! write")
+    vim.cmd("checktime")
+end
+
 -- Autosave
-vim.api.nvim_set_keymap('i', '<C-[>', '<Esc>:update<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('i', '<Esc>', '<Esc>:update<CR>', { noremap = true, silent = true })
 
 vim.cmd([[
 augroup CursorLineNrHighlight
@@ -36,7 +51,3 @@ augroup CursorLineNrHighlight
   autocmd VimEnter * highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 augroup END
 ]])
-
-
-
-vim.opt.clipboard = "unnamedplus"
