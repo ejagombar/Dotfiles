@@ -1,6 +1,6 @@
 # Path to your oh-my-zsh installation. export ZSH="$HOME/.oh-my-zsh"
 export ZSH="$HOME/.oh-my-zsh"
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh
 
 ZSH_TMUX_AUTOSTART=false
 
@@ -34,14 +34,19 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 source $ZSH/oh-my-zsh.sh
 source ~/Repos/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# Source stuff for OpenMPI
+if [[ "$PWD" == *"folder1"* ]]; then
+    module load mpi/openmpi-x86_64
+fi
+
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 alias q="~ && clear"
 alias dl='cd ~/Downloads'
 alias rp='cd ~/Repos/Projects'
-alias pp='cd ~/Repos/Playground'
-alias pf='cd ~/Repos/Forks'
-alias pj='cd ~/Repos/Work'
+alias rpl='cd ~/Repos/Playground'
+alias rf='cd ~/Repos/Forks'
+alias rw='cd ~/Repos/Work'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
