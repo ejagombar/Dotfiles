@@ -32,16 +32,16 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 
 # Source plugins. Must be done after plugins are added
 source $ZSH/oh-my-zsh.sh
-source ~/Projects/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/Repos/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
 alias q="~ && clear"
 alias dl='cd ~/Downloads'
-alias pr='cd ~/Projects/Repos'
-alias pp='cd ~/Projects/Playground'
-alias pf='cd ~/Projects/Forks'
-alias pj='cd ~/Projects/Job'
+alias rp='cd ~/Repos/Projects'
+alias pp='cd ~/Repos/Playground'
+alias pf='cd ~/Repos/Forks'
+alias pj='cd ~/Repos/Work'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
