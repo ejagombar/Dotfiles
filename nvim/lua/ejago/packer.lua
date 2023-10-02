@@ -29,6 +29,8 @@ return require('packer').startup(function(use)
 
     use('aserowy/tmux.nvim')
 
+    use('sakhnik/nvim-gdb')
+
     use {
         "zbirenbaum/copilot.lua",
         cmd = "Copilot",
