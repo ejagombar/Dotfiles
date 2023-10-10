@@ -23,3 +23,5 @@ chsh -s $(which zsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 
+OpenMP Stuff
+sudo dnf install openmpi openmpi-devel

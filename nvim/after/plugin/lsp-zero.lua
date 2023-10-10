@@ -49,6 +49,10 @@ lsp.on_attach(function(client, bufnr)
         client.server_capabilities.document_formatting = false
     end
 
+    if client.name == "clangd" then
+        client.arguments = '--style="{IndentWidth: 8}"'
+    end
+
     lsp.buffer_autoformat()
     lsp.default_keymaps({ buffer = bufnr })
     vim.keymap.set('n', 'gl', vim.diagnostic.open_float)

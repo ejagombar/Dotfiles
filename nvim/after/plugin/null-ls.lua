@@ -11,6 +11,7 @@ local formatting = null_ls.builtins.formatting
 vim.env.PRETTIERD_DEFAULT_CONFIG = vim.fn.expand('~/.prettierrc')
 
 
+
 null_ls.setup({
     debug = false,
     sources = {
