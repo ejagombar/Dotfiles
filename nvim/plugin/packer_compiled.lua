@@ -178,11 +178,6 @@ _G.packer_plugins = {
     path = "/home/ejago/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
   },
-  ["nvim-tmux-navigation"] = {
-    loaded = true,
-    path = "/home/ejago/.local/share/nvim/site/pack/packer/start/nvim-tmux-navigation",
-    url = "https://github.com/alexghergh/nvim-tmux-navigation"
-  },
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/ejago/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
@@ -223,15 +218,15 @@ _G.packer_plugins = {
     path = "/home/ejago/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
   },
+  ["tmux.nvim"] = {
+    loaded = true,
+    path = "/home/ejago/.local/share/nvim/site/pack/packer/start/tmux.nvim",
+    url = "https://github.com/aserowy/tmux.nvim"
+  },
   undotree = {
     loaded = true,
     path = "/home/ejago/.local/share/nvim/site/pack/packer/start/undotree",
     url = "https://github.com/mbbill/undotree"
-  },
-  ["vim-be-good"] = {
-    loaded = true,
-    path = "/home/ejago/.local/share/nvim/site/pack/packer/start/vim-be-good",
-    url = "https://github.com/theprimeagen/vim-be-good"
   },
   ["vim-fugitive"] = {
     loaded = true,

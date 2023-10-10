@@ -35,7 +35,7 @@ source $ZSH/oh-my-zsh.sh
 source ~/Repos/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Source stuff for OpenMPI
-if [[ "$PWD" == *"folder1"* ]]; then
+if [[ "$PWD" == *"Module-4115"* ]]; then
     module load mpi/openmpi-x86_64
 fi
 
