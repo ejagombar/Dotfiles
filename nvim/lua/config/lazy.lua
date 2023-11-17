@@ -11,9 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-local plugins = {
-    'wbthomason/packer.nvim',
-    'navarasu/onedark.nvim',
+local pluginsa = {
     'nvim-treesitter/nvim-treesitter',
     'theprimeagen/harpoon',
     'mbbill/undotree',
@@ -28,19 +26,6 @@ local plugins = {
     'aserowy/tmux.nvim',
     'sakhnik/nvim-gdb',
     "zbirenbaum/copilot.lua",
-    {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.1',
-        dependencies = { { 'nvim-lua/plenary.nvim' } }
-    },
-
-    {
-        "nvim-telescope/telescope-file-browser.nvim",
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "nvim-lua/plenary.nvim" }
-    },
-
     {
         'jose-elias-alvarez/null-ls.nvim',
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -70,6 +55,12 @@ local plugins = {
     },
 }
 
-local opts = {}
+local plugins = "plugins2"
+local opts = {
+    change_detection = {
+        notify = false,
+    }
+}
 
 require("lazy").setup(plugins, opts)
+
