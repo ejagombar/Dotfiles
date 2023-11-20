@@ -8,8 +8,7 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 -- vim.keymap.set("n", "<Leader>h", "^")
 -- vim.keymap.set("n", "<Leader>l", "g_")
 
-vim.keymap.set("n", "<Leader>e", "%")
-vim.keymap.set("v", "<Leader>e", "%")
+vim.keymap.set({"n","v"}, "<Leader>e", "%")
 
 vim.keymap.set("n", "cp", "+y")
 vim.keymap.set("n", "cv", "+p")
