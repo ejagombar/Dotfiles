@@ -13,6 +13,7 @@ return {
 			definition_action_keys = {
 				edit = "<CR>",
 			},
+			enable = true,
 			icons = {
 				code_action_icon = "",
 			},

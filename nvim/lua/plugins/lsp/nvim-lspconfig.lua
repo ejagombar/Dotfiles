@@ -13,8 +13,6 @@ local config = function()
 
 	local capabilities = cmp_nvim_lsp.default_capabilities()
 
-	local keymap = vim.keymap
-
 	local on_attach = function(client, bufnr)
 		local opts = { noremap = true, silent = true }
 
@@ -42,11 +40,11 @@ local config = function()
 		opts.desc = "Show LSP references"
 		mapkey("<leader>fd", "<cmd>Telescope lsp_references<CR>", "n", opts) -- show definition, references
 
-		opts.desc = "Highlight all appearances of that word"
-		mapkey("<leader>hl", "Lspsaga peek_definition", "n", opts)
+		-- opts.desc = "Highlight all appearances of that word"
+		-- mapkey("<leader>hl", "Lspsaga peek_definition", "n", opts)
 
 		opts.desc = "Go to definition"
-		mapkey("<leader>gd", "Lspsaga goto_definition", "n", opts) -- go to definition
+		mapkey("gd", "Lspsaga goto_definition", "n", opts) -- go to definition
 
 		opts.desc = "Code actions"
 		mapkey("<leader>ca", "Lspsaga code_action", "n", opts) -- see available code actions
@@ -76,7 +74,7 @@ local config = function()
 		mapkey("<leader>rs", ":LspRestart<CR>", "n", opts) -- mapping to restart lsp if necessary
 
 		if client.name == "pyright" then
-			keymap.set("n", "<leader>io", "PyrightOrganizeImports", opts) -- mapping to restart lsp if necessary
+			mapkey("<Leader>oi", "PyrightOrganizeImports", "n", opts)
 		end
 	end
 
@@ -99,6 +97,13 @@ local config = function()
 				},
 			},
 		},
+	})
+
+	-- Go
+	lspconfig.gopls.setup({
+		capabilities = capabilities,
+		on_attach = on_attach,
+		filetypes = { "go" },
 	})
 
 	-- json
@@ -196,6 +201,8 @@ local config = function()
 	local solhint = require("efmls-configs.linters.solhint")
 	local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
+	local golangci_lint = require("efmls-configs.linters.golangci_lint")
+	local gofumpt = require("efmls-configs.formatters.gofumpt")
 
 	-- configure efm server
 	lspconfig.efm.setup({
@@ -216,6 +223,7 @@ local config = function()
 			"css",
 			"c",
 			"cpp",
+			"go",
 		},
 		init_options = {
 			documentFormatting = true,
@@ -243,6 +251,7 @@ local config = function()
 				css = { prettier_d },
 				c = { clangformat, cpplint },
 				cpp = { clangformat, cpplint },
+				go = { gofumpt, golangci_lint },
 			},
 		},
 	})
