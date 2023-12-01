@@ -14,9 +14,7 @@ return {
 				edit = "<CR>",
 			},
 			enable = true,
-			icons = {
-				code_action_icon = "",
-			},
+			ui = { enabled = false, code_action = "", sign = false },
 		})
 	end,
 	dependencies = {

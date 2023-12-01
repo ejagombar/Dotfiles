@@ -43,23 +43,11 @@ local config = function()
 		-- opts.desc = "Highlight all appearances of that word"
 		-- mapkey("<leader>hl", "Lspsaga peek_definition", "n", opts)
 
-		opts.desc = "Go to definition"
-		mapkey("gd", "Lspsaga goto_definition", "n", opts) -- go to definition
-
 		opts.desc = "Code actions"
 		mapkey("<leader>ca", "Lspsaga code_action", "n", opts) -- see available code actions
 
-		opts.desc = "Smart rename"
-		mapkey("<leader>rn", "Lspsaga rename", "n", opts) -- smart rename
-
-		opts.desc = "Show LSP implementations"
-		mapkey("gi", "<cmd>Telescope lsp_implementations<CR>", "n", opts) -- show lsp implementations
-
 		opts.desc = "Show line diagnostics"
-		mapkey("<leader>D", "Lspsaga show_line_diagnostics", "n", opts) -- show  diagnostics for line
-
-		opts.desc = "Show cursor diagnostics"
-		mapkey("<leader>d", "Lspsaga show_cursor_diagnostics", "n", opts) -- show diagnostics for cursor
+		mapkey("gl", "Lspsaga show_line_diagnostics", "n", opts) -- show  diagnostics for line
 
 		opts.desc = "Go to the previous diagnostic"
 		mapkey("<leader>pd", "Lspsaga diagnostic_jump_prev", "n", opts) -- jump to prev diagnostic in buffer

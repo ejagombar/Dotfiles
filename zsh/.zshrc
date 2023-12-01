@@ -1,6 +1,9 @@
 # Path to your oh-my-zsh installation. export ZSH="$HOME/.oh-my-zsh"
 export ZSH="$HOME/.oh-my-zsh"
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh:/home/ejago/.local/bin
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
 ZSH_TMUX_AUTOSTART=true
 
@@ -56,3 +59,5 @@ alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 # For a full list of active aliases, run `alias`.
 
 eval "$(starship init zsh)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
