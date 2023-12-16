@@ -44,7 +44,7 @@ local config = function()
 
 	vim.keymap.set("n", "<leader>ps", function()
 		builtin.live_grep()
-	end)
+    	end)
 
 	vim.keymap.set("n", "<leader>pg", function()
 		builtin.git_files()
@@ -57,6 +57,7 @@ local config = function()
 	vim.keymap.set("n", "gd", function()
 		builtin.lsp_definitions()
 	end)
+
 	vim.keymap.set("n", "gr", function()
 		builtin.lsp_references()
 	end)
