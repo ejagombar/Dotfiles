@@ -1,5 +1,6 @@
-require('tmux').setup(
-    {
+return {
+    'aserowy/tmux.nvim',
+    config= {
         copy_sync = {
             -- enables copy sync. by default, all registers are synchronized.
             -- to control which registers are synced, see the `sync_*` options.
@@ -26,4 +27,4 @@ require('tmux').setup(
             resize_step_y = 5,
         }
     }
-)
+}

@@ -14,7 +14,7 @@ ln -s ~/Projects/Repos/Dotfiles/.tmux.conf ~/
 ln -s ~/Projects/Repos/Dotfiles/.prettierrc ~/
 
 #Install programs
-sudo dnf install -y gh tmux zsh bat exa neovim
+sudo dnf install -y gh tmux zsh bat exa neovim luarocks
 
 #Set ZSH as default
 chsh -s $(which zsh)

@@ -1,1 +1,1 @@
-require("ejago")
+require("config")
