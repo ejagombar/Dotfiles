@@ -9,6 +9,8 @@ local config = function()
 				"node_modules",
 				"build",
 				".git/",
+				"venv",
+				".venv",
 			},
 		},
 		extensions = {
@@ -44,7 +46,7 @@ local config = function()
 
 	vim.keymap.set("n", "<leader>ps", function()
 		builtin.live_grep()
-    	end)
+	end)
 
 	vim.keymap.set("n", "<leader>pg", function()
 		builtin.git_files()
@@ -74,12 +76,16 @@ local config = function()
 			--[[  ]]
 		})
 	end)
+
+	vim.keymap.set("n", "<leader>vh", function()
+		builtin.help_tags()
+	end)
 end
 
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.4",
+		tag = "0.1.5",
 		lazy = false,
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = config,
@@ -92,3 +98,4 @@ return {
 		},
 	},
 }
+

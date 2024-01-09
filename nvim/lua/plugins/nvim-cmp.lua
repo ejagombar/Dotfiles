@@ -22,8 +22,9 @@ return {
 				-- ["<C-f>"] = cmp.mapping.scroll_docs(4),
 				["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
 				["<C-c>"] = cmp.mapping.abort(), -- close completion window
-				["<C-y>"] = cmp.mapping.confirm({ select = false }),
+				["<C-y>"] = cmp.mapping.confirm({ select = true }),
 			}),
+
 			-- sources for autocompletion
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" }, -- lsp
@@ -38,6 +39,30 @@ return {
 					ellipsis_char = "...",
 				}),
 			},
+			experimental = {
+				ghost_text = true,
+			},
+		})
+
+		cmp.setup.cmdline({ "/", "?" }, {
+			mapping = cmp.mapping.preset.cmdline(),
+			sources = {
+				{ name = "buffer" },
+			},
+		})
+
+		cmp.setup.cmdline(":", {
+			mapping = cmp.mapping.preset.cmdline(),
+			sources = cmp.config.sources({
+				{ name = "path" },
+			}, {
+				{
+					name = "cmdline",
+					option = {
+						ignore_cmds = { "Man", "!" },
+					},
+				},
+			}),
 		})
 	end,
 	dependencies = {
@@ -50,5 +75,8 @@ return {
 			-- install jsregexp (optional!).
 			build = "make install_jsregexp",
 		},
+		"hrsh7th/cmp-cmdline",
+		"hrsh7th/cmp-buffer",
 	},
 }
+
