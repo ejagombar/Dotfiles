@@ -28,6 +28,8 @@ vim.o.cursorline = true
 
 vim.opt.clipboard = "unnamedplus"
 
+vim.g.loaded_perl_provider = false -- disable warning in :checkhealth
+
 vim.cmd([[
   augroup AutoSaveReadGroup
     autocmd!
@@ -37,8 +39,8 @@ vim.cmd([[
 
 -- Function to automatically save and read the file
 function AutoSaveRead()
-    vim.cmd("silent! write")
-    vim.cmd("checktime")
+	vim.cmd("silent! write")
+	vim.cmd("checktime")
 end
 
 -- Autosave
