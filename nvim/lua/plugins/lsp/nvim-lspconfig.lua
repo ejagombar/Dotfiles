@@ -166,20 +166,19 @@ local config = function()
 		on_attach = on_attach,
 	})
 
-	-- C/C++
-	lspconfig.clangd.setup({
-		capabilities = capabilities,
-		on_attach = on_attach,
-		cmd = {
-			"clangd",
-			'--offset-encoding=utf-16 --style="{IndentWidth: 8}"',
-		},
-	})
+	-- -- C/C++
+	-- lspconfig.clangd.setup({
+	-- 	capabilities = capabilities,
+	-- 	on_attach = on_attach,
+	-- 	cmd = {
+	-- 		"clangd",
+	-- 		'--offset-encoding=utf-16 --style="{IndentWidth: 8}"',
+	-- 	},
+	-- 	root_dir = lspconfig.util.root_pattern(".git"),
+	-- })
 
 	local luacheck = require("efmls-configs.linters.luacheck")
 	local stylua = require("efmls-configs.formatters.stylua")
-	local flake8 = require("efmls-configs.linters.flake8")
-	local black = require("efmls-configs.formatters.black")
 	local eslint_d = require("efmls-configs.linters.eslint_d")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
 	local fixjson = require("efmls-configs.formatters.fixjson")
@@ -196,7 +195,6 @@ local config = function()
 	lspconfig.efm.setup({
 		filetypes = {
 			"lua",
-			"python",
 			"json",
 			"jsonc",
 			"sh",
@@ -224,7 +222,6 @@ local config = function()
 		settings = {
 			languages = {
 				lua = { luacheck, stylua },
-				python = { flake8, black },
 				typescript = { eslint_d, prettier_d },
 				json = { eslint_d, fixjson },
 				jsonc = { eslint_d, fixjson },
@@ -272,3 +269,4 @@ return {
 		"creativenull/efmls-configs-nvim",
 	},
 }
+

@@ -64,18 +64,18 @@ local config = function()
 		builtin.lsp_references()
 	end)
 
-	-- vim.keymap.set("n", "<leader>pv", function()
-	-- 	telescope.extensions.file_browser.file_browser({
-	-- 		path = "%:p:h",
-	-- 		cwd = telescope_buffer_dir(),
-	-- 		-- respect_gitignore = false,
-	-- 		hidden = true,
-	-- 		grouped = true,
-	-- 		initial_mode = "normal",
-	-- 		-- layout_config = { height = 40, width = 160 }
-	-- 		--[[  ]]
-	-- 	})
-	-- end)
+	vim.keymap.set("n", "<leader>pv", function()
+		telescope.extensions.file_browser.file_browser({
+			path = "%:p:h",
+			cwd = telescope_buffer_dir(),
+			-- respect_gitignore = false,
+			hidden = true,
+			grouped = true,
+			initial_mode = "normal",
+			-- layout_config = { height = 40, width = 160 }
+			--[[  ]]
+		})
+	end)
 
 	vim.keymap.set("n", "<leader>vh", function()
 		builtin.help_tags()
