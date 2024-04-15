@@ -5,7 +5,12 @@ export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modu
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
-ZSH_TMUX_AUTOSTART=true
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+export FLYCTL_INSTALL="/home/ejago/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+# ZSH_TMUX_AUTOSTART=true
 
 # disable zsh vim command mode
 bindkey -a -r ':'
@@ -27,6 +32,7 @@ plugins=(
 function zvm_config() {
   ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
 }
+
 
 # Remove underline from paths
 (( ${+ZSH_HIGHLIGHT_STYLES} )) || typeset -A ZSH_HIGHLIGHT_STYLES
@@ -61,3 +67,10 @@ alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 eval "$(starship init zsh)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+
+run_tmux_sessionizer_widget() {
+    ~/Repos/Projects/Dotfiles/tmux/tmuxSessionizer.sh
+}
+
+zle -N run_tmux_sessionizer_widget
+bindkey '^F' run_tmux_sessionizer_widget

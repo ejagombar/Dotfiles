@@ -27,12 +27,14 @@ local config = function()
 		-- keymap.set("n", "gi", "<cmd>Telescope lsp_implementations<CR>", opts) -- show lsp implementations
 		-- keymap.set("n", "gt", "<cmd>Telescope lsp_type_definitions<CR>", opts) -- show lsp type definitions
 		-- keymap.set({ "n", "v" }, "<leader>ca", "Lspsaga code_action", opts) -- see available code actions, in visual mode will apply to selection
-		-- keymap.set("n", "<leader>rn", "Lspsaga rename", opts) -- smart rename
 		-- keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
 		-- keymap.set("n", "<leader>d", "Lspsaga show_cursor_diagnostics", opts) -- show diagnostics for line
 		-- keymap.set("n", "[d", "Lspsaga diagnostic_jump_prev", opts) -- jump to previous diagnostic in buffer
 		-- keymap.set("n", "]d", "Lspsaga diagnostic_jump_prev", opts) -- jump to next diagnostic in buffer
 		-- keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+
+		opts.desc = "Smart Rename"
+		mapkey("<f2>", "Lspsaga rename", "n", opts) -- smart rename
 
 		opts.desc = "IDK update me"
 		mapkey("<leader>fd", "Lspsaga finder", "n", opts)
@@ -124,6 +126,7 @@ local config = function()
 		capabilities = capabilities,
 		filetypes = {
 			"typescript",
+			"typescriptreact",
 		},
 		root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
 	})
@@ -147,9 +150,6 @@ local config = function()
 		capabilities = capabilities,
 		on_attach = on_attach,
 		filetypes = {
-			"typescriptreact",
-			"javascriptreact",
-			"javascript",
 			"css",
 			"sass",
 			"scss",
@@ -178,6 +178,7 @@ local config = function()
 	-- })
 
 	local luacheck = require("efmls-configs.linters.luacheck")
+	local gofumpt = require("efmls-configs.formatters.gofumpt")
 	local stylua = require("efmls-configs.formatters.stylua")
 	local eslint_d = require("efmls-configs.linters.eslint_d")
 	local prettier_d = require("efmls-configs.formatters.prettier_d")
@@ -188,8 +189,6 @@ local config = function()
 	local solhint = require("efmls-configs.linters.solhint")
 	local cpplint = require("efmls-configs.linters.cpplint")
 	local clangformat = require("efmls-configs.formatters.clang_format")
-	local golangci_lint = require("efmls-configs.linters.golangci_lint")
-	local gofumpt = require("efmls-configs.formatters.gofumpt")
 
 	-- configure efm server
 	lspconfig.efm.setup({
@@ -236,7 +235,7 @@ local config = function()
 				css = { prettier_d },
 				c = { clangformat, cpplint },
 				cpp = { clangformat, cpplint },
-				go = { gofumpt, golangci_lint },
+				go = { gofumpt },
 			},
 		},
 	})
