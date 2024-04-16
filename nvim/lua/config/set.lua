@@ -36,18 +36,25 @@ vim.opt.clipboard = "unnamedplus"
 
 vim.g.loaded_perl_provider = false -- disable warning in :checkhealth
 
-vim.cmd([[
-  augroup AutoSaveReadGroup
-    autocmd!
-    autocmd TextChanged,TextChangedI * :lua AutoSaveRead()
-  augroup END
-]])
+-- Configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
--- Function to automatically save and read the file
-function AutoSaveRead()
-	vim.cmd("silent! write")
-	vim.cmd("checktime")
-end
+-- Preview substitutions live, as you type!
+vim.opt.inccommand = "split"
+
+-- vim.cmd([[
+--   augroup AutoSaveReadGroup
+--     autocmd!
+--     autocmd TextChanged,TextChangedI * :lua AutoSaveRead()
+--   augroup END
+-- ]])
+--
+-- -- Function to automatically save and read the file
+-- function AutoSaveRead()
+-- 	vim.cmd("silent! write")
+-- 	vim.cmd("checktime")
+-- end
 
 -- Autosave
 -- vim.api.nvim_set_keymap('i', '<Esc>', '<Esc>:update<CR>', { noremap = true, silent = true })
