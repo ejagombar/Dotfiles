@@ -1,4 +1,4 @@
-require("config")
+-- require("config")
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
