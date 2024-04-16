@@ -20,9 +20,15 @@ vim.opt.incsearch = true
 
 vim.opt.termguicolors = false
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = 10
 
 vim.opt.updatetime = 50
+
+vim.opt.updatetime = 250
+
+vim.opt.timeoutlen = 300
+
+vim.opt.signcolumn = "yes"
 
 vim.o.cursorline = true
 

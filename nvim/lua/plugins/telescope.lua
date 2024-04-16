@@ -4,7 +4,6 @@ local config = function()
 	local fb_actions = require("telescope").extensions.file_browser.actions
 
 	pcall(telescope.load_extension, "fzf")
-	pcall(telescope.load_extension("file_browser"))
 
 	telescope.setup({
 		defaults = {
@@ -33,6 +32,8 @@ local config = function()
 			},
 		},
 	})
+
+	pcall(telescope.load_extension("file_browser"))
 
 	-- vim.keymap.set("n", "<leader>pf", function()
 	-- 	builtin.find_files({
