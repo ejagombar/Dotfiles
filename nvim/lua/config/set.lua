@@ -27,7 +27,6 @@ vim.opt.updatetime = 50
 vim.opt.timeoutlen = 300
 
 vim.opt.signcolumn = "yes"
-vim.opt.colorcolumn = "80"
 
 vim.o.cursorline = true
 
