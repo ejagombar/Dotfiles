@@ -24,13 +24,14 @@ vim.opt.scrolloff = 10
 
 vim.opt.updatetime = 50
 
-vim.opt.updatetime = 250
-
 vim.opt.timeoutlen = 300
 
 vim.opt.signcolumn = "yes"
+vim.opt.colorcolumn = "80"
 
 vim.o.cursorline = true
+
+vim.opt.swapfile = false
 
 vim.opt.clipboard = "unnamedplus"
 
