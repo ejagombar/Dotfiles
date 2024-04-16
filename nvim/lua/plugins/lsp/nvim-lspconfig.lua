@@ -2,7 +2,7 @@ local config = function()
 	-- require("neoconf").setup({})
 	local cmp_nvim_lsp = require("cmp_nvim_lsp")
 	local lspconfig = require("lspconfig")
-	local mapkey = require("util.keymapper").mapkey
+	-- local mapkey = require("util.keymapper").mapkey
 
 	local diagnostic_signs = { Error = "", Warn = "", Hint = "󰠠", Info = "" }
 
@@ -32,6 +32,10 @@ local config = function()
 		-- keymap.set("n", "[d", "Lspsaga diagnostic_jump_prev", opts) -- jump to previous diagnostic in buffer
 		-- keymap.set("n", "]d", "Lspsaga diagnostic_jump_prev", opts) -- jump to next diagnostic in buffer
 		-- keymap.set("n", "<leader>rs", ":LspRestart<CR>", opts) -- mapping to restart lsp if necessary
+		-- 
+		local mapkey = function(keys, func, desc)
+			vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+		end
 
 		opts.desc = "Smart Rename"
 		mapkey("<f2>", "Lspsaga rename", "n", opts) -- smart rename
@@ -268,4 +272,3 @@ return {
 		"creativenull/efmls-configs-nvim",
 	},
 }
-
