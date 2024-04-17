@@ -7,6 +7,7 @@ return {
 				synchronize = "w",
 			},
 		})
+		vim.keymap.set("n", "<leader>ov", require("mini.files").open)
 
 		vim.api.nvim_create_autocmd("User", {
 			pattern = "MiniFilesBufferCreate",
