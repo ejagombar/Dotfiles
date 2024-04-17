@@ -36,10 +36,6 @@ vim.opt.clipboard = "unnamedplus"
 
 vim.g.loaded_perl_provider = false -- disable warning in :checkhealth
 
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
