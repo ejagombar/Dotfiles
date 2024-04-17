@@ -58,7 +58,8 @@ alias rf='cd ~/Repos/Forks'
 alias rw='cd ~/Repos/Work'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
-alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
+# alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
+alias v='nvim'
 alias cat="bat"
 alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 
