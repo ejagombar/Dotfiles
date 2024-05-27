@@ -17,6 +17,7 @@ bindkey -a -r ':'
 
 # just remind me to update when it's time
 zstyle ':omz:update' mode reminder  
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # stamp shown in the history command output.
 HIST_STAMPS="dd/mm/yyyy"
@@ -68,6 +69,7 @@ alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 eval "$(starship init zsh)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
+eval "$(zoxide init --cmd cd zsh)"
 
 run_tmux_sessionizer_widget() {
     ~/Repos/Projects/Dotfiles/tmux/tmuxSessionizer.sh
