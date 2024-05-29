@@ -7,7 +7,11 @@ return {
 				synchronize = "w",
 			},
 		})
-		vim.keymap.set("n", "<leader>ov", require("mini.files").open)
+
+		vim.keymap.set("n", "<leader>ov", function()
+			local current_file = vim.api.nvim_buf_get_name(0)
+			require("mini.files").open(current_file, false)
+		end)
 
 		vim.api.nvim_create_autocmd("User", {
 			pattern = "MiniFilesBufferCreate",

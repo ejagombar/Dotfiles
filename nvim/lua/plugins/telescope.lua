@@ -23,6 +23,7 @@ local config = function()
 	vim.keymap.set("n", "<leader>od", builtin.diagnostics)
 	vim.keymap.set("n", "<leader>or", builtin.resume)
 	vim.keymap.set("n", "<leader>ob", builtin.buffers)
+	vim.keymap.set("n", "<leader>og", builtin.git_files)
 
 	vim.keymap.set("n", "<leader>vh", function()
 		builtin.help_tags()
