@@ -32,7 +32,6 @@ return {
 				"tailwindcss",
 				"pyright",
 				"lua_ls",
-				"jsonls",
 				"gopls",
 				"clangd",
 				"html",

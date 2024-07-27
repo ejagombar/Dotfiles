@@ -49,6 +49,15 @@ return {
 						callback = vim.lsp.buf.clear_references,
 					})
 				end
+				-- require("lspconfig").clangd.setup({
+				-- 	vim.api.nvim_create_autocmd("BufWritePre", {
+				-- 		group = vim.api.nvim_create_augroup("clangd_format_on_save", { clear = true }),
+				-- 		buffer = event.buf,
+				-- 		callback = function()
+				-- 			vim.cmd('%!clang-format --style="{ColumnLimit: 0, IndentWidth: 4}"')
+				-- 		end,
+				-- 	}),
+				-- })
 			end,
 		})
 
@@ -72,13 +81,19 @@ return {
 			clangd = {
 				cmd = {
 					"clangd",
-					-- '--offset-encoding=utf-16 --style="{IndentWidth: 8}"',
+					-- '--offset-encoding=utf-16 --style="{IndentWidth: 8, ColumnLimit:0}"',
 				},
-				filetypes = { "cpp", "c" },
+				init_options = {
+					usePlaceholders = true,
+					completeUnimported = true,
+					clangdFileStatus = true,
+					semanticHighlighting = true,
+				},
+				filetypes = { "cpp", "c", "hpp", "cc", "cxx", "hxx", "h" },
 			},
 			gopls = {},
 			bash = {},
-			json = {},
+			-- json = {},
 			pyright = {},
 			-- rust_analyzer = {},
 			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -88,6 +103,12 @@ return {
 			--
 			-- But for many setups, the LSP (`tsserver`) will work just fine
 			tsserver = {},
+
+			glsl_analyzer = {
+				-- cmd = { "glsl-analyzer" }, -- Make sure 'glsl-analyzer' is in your PATH
+				filetypes = { "vertexshader", "fragmentshader", "glsl" }, -- Add your custom filetypes here
+				-- root_dir = vim.loop.cwd, -- Set root directory (optional)
+			},
 
 			lua_ls = {
 				-- cmd = {...},
@@ -124,6 +145,13 @@ return {
 					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 					require("lspconfig")[server_name].setup(server)
 				end,
+			},
+		})
+
+		vim.filetype.add({
+			extension = {
+				vert = "vertexshader",
+				frag = "fragmentshader",
 			},
 		})
 	end,

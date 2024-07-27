@@ -10,6 +10,10 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export FLYCTL_INSTALL="/home/ejago/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 
+# VCPKG Stuff
+export VCPKG_ROOT=/home/ejago/Repos/Forks/vcpkg
+export PATH=$VCPKG_ROOT:$PATH
+
 # ZSH_TMUX_AUTOSTART=true
 
 # disable zsh vim command mode
@@ -61,6 +65,7 @@ alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 # alias v='__v() { if [ $# -eq 0 ]; then nvim .; else nvim "$1"; fi; }; __v'
 alias v='nvim'
+alias cd='z'
 alias cat="bat"
 alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 
@@ -69,7 +74,7 @@ alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 eval "$(starship init zsh)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
 
 run_tmux_sessionizer_widget() {
     ~/Repos/Projects/Dotfiles/tmux/tmuxSessionizer.sh

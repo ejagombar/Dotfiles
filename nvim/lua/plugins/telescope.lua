@@ -14,6 +14,11 @@ local config = function()
 				".venv",
 			},
 		},
+		pickers = {
+			find_files = {
+				hidden = true,
+			},
+		},
 	})
 
 	vim.keymap.set("n", "<leader>oh", builtin.help_tags)
