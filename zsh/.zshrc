@@ -23,11 +23,12 @@ bindkey -a -r ':'
 zstyle ':omz:update' mode reminder  
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
+
 # stamp shown in the history command output.
 HIST_STAMPS="dd/mm/yyyy"
 
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
+plugins+=(
 	git
 	zsh-autosuggestions
     zsh-vi-mode
@@ -36,6 +37,7 @@ plugins=(
 
 function zvm_config() {
   ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+  ZVM_LAZY_KEYBINDINGS=false
 }
 
 
@@ -47,11 +49,6 @@ ZSH_HIGHLIGHT_STYLES[path_prefix]=none
 # Source plugins. Must be done after plugins are added
 source $ZSH/oh-my-zsh.sh
 source ~/Repos/Forks/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Source stuff for OpenMPI
-if [[ "$PWD" == *"Module-4115"* ]]; then
-    module load mpi/openmpi-x86_64
-fi
 
 # http://askubuntu.com/questions/22037/aliases-not-available-when-using-sudo
 alias sudo='sudo '
@@ -68,17 +65,20 @@ alias v='nvim'
 alias cd='z'
 alias cat="bat"
 alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
+bindkey -e
+bindkey -s "^F" '^Qfg^M'
+
 
 # For a full list of active aliases, run `alias`.
-
 eval "$(starship init zsh)"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 eval "$(zoxide init zsh)"
 
+
 run_tmux_sessionizer_widget() {
     ~/Repos/Projects/Dotfiles/tmux/tmuxSessionizer.sh
 }
 
-zle -N run_tmux_sessionizer_widget
-bindkey '^F' run_tmux_sessionizer_widget
+# zle -N run_tmux_sessionizer_widget
+# bindkey '^F' run_tmux_sessionizer_widget
