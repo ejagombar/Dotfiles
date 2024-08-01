@@ -87,18 +87,18 @@ bindkey -a -r ':' #Disable vi command mode
 
 # Remove bindings from esc ^[ so that command mode can be entered instantly
 # bindkey -M vicmd '^[' undefined-key
-bindkey -r "^[,"
-bindkey -r "^[/"
-bindkey -r "^[OA"
-bindkey -r "^[OB"
-bindkey -r "^[OC"
-bindkey -r "^[OD"
-bindkey -r "^[[200~"
-bindkey -r "^[[A"
-bindkey -r "^[[B"
-bindkey -r "^[[C"
-bindkey -r "^[[D"
-bindkey -r "^[~"
+# bindkey -r "^[,"
+# bindkey -r "^[/"
+# bindkey -r "^[OA"
+# bindkey -r "^[OB"
+# bindkey -r "^[OC"
+# bindkey -r "^[OD"
+# bindkey -r "^[[200~"
+# bindkey -r "^[[A"
+# bindkey -r "^[[B"
+# bindkey -r "^[[C"
+# bindkey -r "^[[D"
+# bindkey -r "^[~"
 
 type starship_zle-keymap-select >/dev/null || \
 {

@@ -39,6 +39,9 @@ vim.g.loaded_perl_provider = false -- disable warning in :checkhealth
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
+vim.cmd("autocmd BufEnter * set formatoptions-=cro")
+vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
+
 -- vim.cmd([[
 --   augroup AutoSaveReadGroup
 --     autocmd!
