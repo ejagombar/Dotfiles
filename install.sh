@@ -10,11 +10,6 @@ usage() {
     exit 1
 }
 
-if [[ $EUID -ne 0 ]]; then
-    echo "This script must be run as root"
-    exit 1
-fi
-
 # Parse arguments
 EXTRA_FLAG=0
 LATEST_FLAG=0
@@ -40,9 +35,9 @@ APT_CMD=$(which apt)
 DNF_CMD=$(which dnf)
 
 if [[ ! -z $APT_CMD ]]; then
-    INSTALL_CMD="apt install -y"
+    INSTALL_CMD="sudo apt install -y"
 elif [[ ! -z $DNF_CMD ]]; then
-    INSTALL_CMD="dnf install -y"
+    INSTALL_CMD="sudo dnf install -y"
 else
     echo "Error: can't install packages"
     exit 1
@@ -56,7 +51,7 @@ echo "Installing dependencies..."
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-    rm -rf /opt/nvim
+    sudo rm -rf /opt/nvim
     tar -C /opt -xzf nvim-linux64.tar.gz
 else 
     $INSTALL_CMD "neovim"
