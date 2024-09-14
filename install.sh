@@ -6,7 +6,7 @@ RESET="\e[0m"
 
 # Function to show usage
 usage() {
-    echo "Usage: $0 [--extra]"
+    echo -e "${BOLD_RED}Usage: $0 [--extra] [--latest]${RESET}"
     exit 1
 }
 
@@ -30,7 +30,6 @@ if [[ $CONFIRMATION != "y" ]]; then
     exit 0
 fi
 
-
 APT_CMD=$(which apt)
 DNF_CMD=$(which dnf)
 
@@ -39,30 +38,26 @@ if [[ ! -z $APT_CMD ]]; then
 elif [[ ! -z $DNF_CMD ]]; then
     INSTALL_CMD="sudo dnf install -y"
 else
-    echo "Error: can't install packages"
+    echo -e "${BOLD_RED}Error: can't install packages${RESET}"
     exit 1
 fi
 
-BASE_PACKAGES = "tmux zsh neovim rg fzf"
-EXTRA_PACKAGES = "bat exa luarocks gh"
+BASE_PACKAGES="tmux zsh neovim rg fzf"
+EXTRA_PACKAGES="bat exa luarocks gh"
 
 echo "Installing dependencies..."
-
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
     sudo rm -rf /opt/nvim
-    tar -C /opt -xzf nvim-linux64.tar.gz
+    sudo tar -C /opt -xzf nvim-linux64.tar.gz
 else 
-    $INSTALL_CMD "neovim"
+    $INSTALL_CMD $BASE_PACKAGES
 fi
-
-$INSTALL_CMD $BASE_PACKAGES
 
 if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
 fi
-
 
 echo "Cloning repos..."
 
@@ -73,44 +68,42 @@ echo "Installing zsh autosuggestions"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 echo "Installing zsh syntax highlighting"
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 echo "Installing Spaceship prompt"
-git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
+git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
 
 echo "Installing Tmux TPM"
 git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 
-
 echo "Setting symlinks..."
 cwd=$(pwd)
 
-echo "\tSetting tmux symlink"
-rm "$HOME/.tmux.conf"
-ln -s "$cwd/tmux/.tmux.conf" "$HOME/"
+echo -e "${BOLD_GREEN}\tSetting tmux symlink${RESET}"
+rm -f "$HOME/.tmux.conf"
+ln -sf "$cwd/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
-echo "\tSetting zsh symlink"
-rm "$HOME/.zshrc"
-ln -s "$cwd/zsh/.zshrc" "$HOME/"
+echo -e "${BOLD_GREEN}\tSetting zsh symlink${RESET}"
+rm -f "$HOME/.zshrc"
+ln -sf "$cwd/zsh/.zshrc" "$HOME/.zshrc"
 
-echo "\tSetting nvim symlink"
-rm -r "$HOME/.config/nvim"
-ln -s "$cwd/nvim" "$HOME/.config/"
+echo -e "${BOLD_GREEN}\tSetting nvim symlink${RESET}"
+rm -rf "$HOME/.config/nvim"
+ln -sf "$cwd/nvim" "$HOME/.config/nvim"
 
-echo "\tSetting starship symlink"
-rm "$HOME/.config/starship.toml"
-ln -s "$cwd/zsh/starship.toml." "$HOME/.config/"
+echo -e "${BOLD_GREEN}\tSetting starship symlink${RESET}"
+rm -f "$HOME/.config/starship.toml"
+ln -sf "$cwd/zsh/starship.toml" "$HOME/.config/starship.toml"
 
-echo "\tSetting gitconfig symlink"
-rm "$HOME/.gitconfig"
-ln -s "$cwd/.gitconfig" "$HOME/"
+echo -e "${BOLD_GREEN}\tSetting gitconfig symlink${RESET}"
+rm -f "$HOME/.gitconfig"
+ln -sf "$cwd/.gitconfig" "$HOME/.gitconfig"
 
-echo "\tSetting prettier symlink"
-rm "$HOME/.prettierrc"
-ln -s "$cwd/.prettierrc" "$HOME/"
-
+echo -e "${BOLD_GREEN}\tSetting prettier symlink${RESET}"
+rm -f "$HOME/.prettierrc"
+ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 
 echo "Adding zsh syntax highlighting path to .zshrc"
 echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
-echo "Finished!"
+echo -e "${BOLD_GREEN}Finished!${RESET}"
