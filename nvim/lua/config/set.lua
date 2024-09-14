@@ -42,22 +42,6 @@ vim.opt.inccommand = "split"
 vim.cmd("autocmd BufEnter * set formatoptions-=cro")
 vim.cmd("autocmd BufEnter * setlocal formatoptions-=cro")
 
--- vim.cmd([[
---   augroup AutoSaveReadGroup
---     autocmd!
---     autocmd TextChanged,TextChangedI * :lua AutoSaveRead()
---   augroup END
--- ]])
---
--- -- Function to automatically save and read the file
--- function AutoSaveRead()
--- 	vim.cmd("silent! write")
--- 	vim.cmd("checktime")
--- end
-
--- Autosave
--- vim.api.nvim_set_keymap('i', '<Esc>', '<Esc>:update<CR>', { noremap = true, silent = true })
-
 vim.cmd([[
 augroup CursorLineNrHighlight
   autocmd!
