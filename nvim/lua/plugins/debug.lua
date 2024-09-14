@@ -89,4 +89,3 @@ return {
 		require("dap-go").setup()
 	end,
 }
-

@@ -36,13 +36,8 @@ return { -- Autoformat
 		formatters = {
 			black = {
 				prepend_args = { "--line-length", "100" },
+				-- NOTE: Here is how to add custom location of formatter: command = <location>
 			},
 		},
 	},
-	-- config = function()
-	-- 	require("conform").formatters.clang = {
-	--            inherit=true,
-	-- 		prepend_args= {    "--style=\"{ColumnLimit: 0, IndentWidth: 4}\"" },
-	-- 	}
-	-- end,
 }

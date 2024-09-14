@@ -27,26 +27,26 @@ return {
 		mason_lspconfig.setup({
 			-- list of servers for mason to install
 			ensure_installed = {
-				"bashls",
-				"tsserver",
-				"tailwindcss",
-				"pyright",
-				"lua_ls",
-				"gopls",
-				"clangd",
-				"html",
-				"cssls",
+				-- "bashls",
+				-- "tsserver",
+				-- "tailwindcss",
+				-- "pyright",
+				-- "lua_ls",
+				-- "gopls",
+				-- "clangd",
+				-- "html",
+				-- "cssls",
 			},
 			automatic_installation = true,
 		})
 
 		mason_tool_installer.setup({
 			ensure_installed = {
-				"stylua", -- lua formatter
-				"isort", -- python formatter
-				"black", -- python formatter
-				"pylint", -- python linter
-				"eslint_d", -- js linter
+				-- "stylua", -- lua formatter
+				-- "isort", -- python formatter
+				-- "black", -- python formatter
+				-- "pylint", -- python linter
+				-- "eslint_d", -- js linter
 			},
 		})
 	end,

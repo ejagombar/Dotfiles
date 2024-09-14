@@ -18,7 +18,7 @@ return {
 			callback = function(args)
 				local buf_id = args.data.buf_id
 				-- Tweak left-hand side of mapping to your liking
-				vim.keymap.set("n", "-", require("mini.files").close, { buffer = buf_id })
+				vim.keymap.set("n", "q", require("mini.files").close, { buffer = buf_id })
 				-- vim.keymap.set("n", "o", gio_open, { buffer = buf_id })
 			end,
 		})
