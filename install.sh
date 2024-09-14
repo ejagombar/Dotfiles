@@ -59,23 +59,11 @@ else
 fi
 
 $INSTALL_CMD $BASE_PACKAGES
+
 if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
 fi
 
-
-# if latest flag is set, do this. else run the normal install below
-
-
- if [[ ! -z $APT_CMD ]]; then
-     apt install -y $(BASE_PACKAGES)
-
- elif [[ ! -z $DNF_CMD ]]; then
-     dnf install -y $(BASE_PACKAGES)
- else
-    echo "Error: can't install packages"
-    exit 1;
- fi
 
 echo "Cloning repos..."
 
