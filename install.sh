@@ -42,7 +42,7 @@ else
     exit 1
 fi
 
-BASE_PACKAGES="tmux zsh neovim ripgrep fzf curl"
+BASE_PACKAGES="tmux zsh neovim ripgrep fzf curl zoxide"
 EXTRA_PACKAGES="bat eza luarocks gh"
 
 echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
@@ -57,6 +57,7 @@ fi
 
 if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 fi
 
 echo -e "${BOLD_GREEN}Cloning repos...${RESET}"
@@ -107,6 +108,8 @@ echo -e "Adding zsh syntax highlighting path to .zshrc${RESET}"
 echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
 echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
+
 chsh -s $(which zsh)
+zsh
 
 echo -e "${BOLD_GREEN}Finished!${RESET}"
