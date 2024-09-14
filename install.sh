@@ -75,7 +75,7 @@ echo "Installing OMZ"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 echo "Installing zsh autosuggestions"
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 echo "Installing zsh syntax highlighting"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -84,35 +84,35 @@ echo "Installing Spaceship prompt"
 git clone https://github.com/spaceship-prompt/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt" --depth=1
 
 echo "Installing Tmux TPM"
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 
 
 echo "Setting symlinks..."
 cwd=$(pwd)
 
 echo "\tSetting tmux symlink"
-rm "~/.tmux.conf"
-ln -s "$cwd/tmux/.tmux.conf" "~/"
+rm "$HOME/.tmux.conf"
+ln -s "$cwd/tmux/.tmux.conf" "$HOME/"
 
 echo "\tSetting zsh symlink"
-rm "~/.zshrc"
-ln -s "$cwd/zsh/.zshrc" "~/"
+rm "$HOME/.zshrc"
+ln -s "$cwd/zsh/.zshrc" "$HOME/"
 
 echo "\tSetting nvim symlink"
-rm -r "~/.config/nvim"
-ln -s "$cwd/nvim" "~/.config/"
+rm -r "$HOME/.config/nvim"
+ln -s "$cwd/nvim" "$HOME/.config/"
 
 echo "\tSetting starship symlink"
-rm "~/.config/starship.toml"
-ln -s "$(cwd)/zsh/starship.toml." "~/.config/"
+rm "$HOME/.config/starship.toml"
+ln -s "$cwd/zsh/starship.toml." "$HOME/.config/"
 
 echo "\tSetting gitconfig symlink"
-rm "~/.gitconfig"
-ln -s "$(cwd)/.gitconfig" "~/"
+rm "$HOME/.gitconfig"
+ln -s "$cwd/.gitconfig" "$HOME/"
 
 echo "\tSetting prettier symlink"
-rm "~/.prettierrc"
-ln -s "$(cwd)/.prettierrc" "~/"
+rm "$HOME/.prettierrc"
+ln -s "$cwd/.prettierrc" "$HOME/"
 
 
 echo "Adding zsh syntax highlighting path to .zshrc"
