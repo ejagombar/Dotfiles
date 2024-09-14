@@ -43,9 +43,9 @@ else
 fi
 
 BASE_PACKAGES="tmux zsh neovim ripgrep fzf curl"
-EXTRA_PACKAGES="bat exa luarocks gh"
+EXTRA_PACKAGES="bat eza luarocks gh"
 
-echo "${BOLD_GREEN}Installing dependencies...${RESET}"
+echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
@@ -59,24 +59,24 @@ if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
 fi
 
-echo "${BOLD_GREEN}Cloning repos...${RESET}"
+echo -e "${BOLD_GREEN}Cloning repos...${RESET}"
 
-echo "${BOLD_GREEN}Installing OMZ${RESET}"
+echo -e "${BOLD_GREEN}Installing OMZ${RESET}"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-echo "${BOLD_GREEN}Installing zsh autosuggestions${RESET}"
+echo -e "${BOLD_GREEN}Installing zsh autosuggestions${RESET}"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-echo "${BOLD_GREEN}Installing zsh syntax highlighting${RESET}"
+echo -e "${BOLD_GREEN}Installing zsh syntax highlighting${RESET}"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-echo "${BOLD_GREEN}Installing Spaceship prompt${RESET}"
+echo -e "${BOLD_GREEN}Installing Spaceship prompt${RESET}"
 git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
 
-echo "${BOLD_GREEN}Installing Tmux TPM${RESET}"
+echo -e "${BOLD_GREEN}Installing Tmux TPM${RESET}"
 git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 
-echo "${BOLD_GREEN}Setting symlinks...${RESET}"
+echo -e "${BOLD_GREEN}Setting symlinks...${RESET}"
 cwd=$(pwd)
 
 echo "Setting tmux symlink"
@@ -103,7 +103,10 @@ echo "Setting prettier symlink"
 rm -f "$HOME/.prettierrc"
 ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 
-echo "Adding zsh syntax highlighting path to .zshrc${RESET}"
+echo -e "Adding zsh syntax highlighting path to .zshrc${RESET}"
 echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+
+echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
+chsh -s $(which zsh)
 
 echo -e "${BOLD_GREEN}Finished!${RESET}"
