@@ -43,7 +43,7 @@ else
 fi
 
 BASE_PACKAGES="tmux zsh neovim ripgrep fzf curl zoxide"
-EXTRA_PACKAGES="bat eza luarocks gh"
+EXTRA_PACKAGES="bat eza luarocks gh fd-find"
 
 echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
 
@@ -58,6 +58,9 @@ fi
 if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
     curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+
+    mkdir -p ~/.local/bin
+    ln -s /usr/bin/batcat ~/.local/bin/bat
 fi
 
 echo -e "${BOLD_GREEN}Cloning repos...${RESET}"
@@ -104,8 +107,19 @@ echo "Setting prettier symlink"
 rm -f "$HOME/.prettierrc"
 ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 
-echo -e "Adding zsh syntax highlighting path to .zshrc${RESET}"
+echo -e "${BOLD_GREEN}Adding zsh syntax highlighting path to .zshrc${RESET}"
 echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+
+
+font_name="FiraCode"
+echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
+curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
+echo "creating fonts folder: ${HOME}/.fonts"
+mkdir -p  "$HOME/.fonts"
+echo "unzip the ${font_name}.zip"
+unzip "${font_name}.zip" -d "$HOME/.fonts/${font_name}/"
+fc-cache -fv
+break
 
 echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
 
