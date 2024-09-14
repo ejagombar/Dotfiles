@@ -82,7 +82,6 @@ alias szrc="source ~/.zshrc"
 alias v='nvim'
 alias cd='z'
 alias cat="bat"
-alias spotlog="nvim ~/Documents/SpotifyNotes.txt"
 bindkey -s "^F" '^Qfg^M'
 bindkey -a -r ':' #Disable vi command mode
 
@@ -106,6 +105,11 @@ type starship_zle-keymap-select >/dev/null || \
     echo "Load starship"
     eval "$(starship init zsh)"
 }
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+
+# Check if pyenv is installed before running its initialization commands
+if command -v pyenv > /dev/null 2>&1; then
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+fi
+
 eval "$(zoxide init zsh)"
