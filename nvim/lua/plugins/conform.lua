@@ -26,16 +26,22 @@ return { -- Autoformat
 			lua = { "stylua" },
 			-- Conform can also run multiple formatters sequentially
 			python = { "isort", "black" },
+
 			cpp = { "clang-format" },
 			--
 			-- You can use a sub-list to tell conform to run *until* a formatter
 			-- is found.
 			javascript = { { "prettierd", "prettier" } },
 		},
+		formatters = {
+			black = {
+				prepend_args = { "--line-length", "100" },
+			},
+		},
 	},
 	-- config = function()
 	-- 	require("conform").formatters.clang = {
- --            inherit=true,
+	--            inherit=true,
 	-- 		prepend_args= {    "--style=\"{ColumnLimit: 0, IndentWidth: 4}\"" },
 	-- 	}
 	-- end,
