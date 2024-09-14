@@ -1,5 +1,9 @@
 #!/bin/bash
 
+BOLD_RED="\e[1;31m"
+BOLD_GREEN="\e[1;32m"
+RESET="\e[0m"
+
 # Function to show usage
 usage() {
     echo "Usage: $0 [--extra]"
@@ -26,7 +30,7 @@ done
 # Confirm running the script
 echo "This script will replace any neovim, tmux, zsh configurations already in place. Are you sure? (y/N)"
 read -r CONFIRMATION
-if [[ $CONFIRMATION != "yes" ]]; then
+if [[ $CONFIRMATION != "y" ]]; then
     echo "Script execution cancelled."
     exit 0
 fi
@@ -87,28 +91,28 @@ echo "Setting symlinks..."
 cwd=$(pwd)
 
 echo "\tSetting tmux symlink"
-rm ~/.tmux.conf
-ln -s $(cwd)/tmux/.tmux.conf ~/
+rm "~/.tmux.conf"
+ln -s "$cwd/tmux/.tmux.conf" "~/"
 
 echo "\tSetting zsh symlink"
-rm ~/.zshrc
-ln -s $(cwd)/zsh/.zshrc ~/
+rm "~/.zshrc"
+ln -s "$cwd/zsh/.zshrc" "~/"
 
 echo "\tSetting nvim symlink"
-rm -r ~/.config/nvim
-ln -s $(cwd)/nvim ~/.config/
+rm -r "~/.config/nvim"
+ln -s "$cwd/nvim" "~/.config/"
 
 echo "\tSetting starship symlink"
-rm ~/.config/starship.toml
-ln -s $(cwd)/zsh/starship.toml. ~/.config/
+rm "~/.config/starship.toml"
+ln -s "$(cwd)/zsh/starship.toml." "~/.config/"
 
 echo "\tSetting gitconfig symlink"
-rm ~/.gitconfig
-ln -s $(cwd)/.gitconfig ~/
+rm "~/.gitconfig"
+ln -s "$(cwd)/.gitconfig" "~/"
 
 echo "\tSetting prettier symlink"
-rm ~/.prettierrc
-ln -s $(cwd)/.prettierrc ~/
+rm "~/.prettierrc"
+ln -s "$(cwd)/.prettierrc" "~/"
 
 
 echo "Adding zsh syntax highlighting path to .zshrc"
