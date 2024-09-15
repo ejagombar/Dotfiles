@@ -37,6 +37,9 @@ fi
 BASE_PACKAGES="tmux zsh ripgrep fzf curl zoxide"
 EXTRA_PACKAGES="bat eza luarocks gh fd-find"
 
+#OpenMP Stuff
+#sudo dnf install openmpi openmpi-devel
+
 echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
