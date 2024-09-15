@@ -46,7 +46,8 @@ if [[ $LATEST_FLAG -eq 1 ]]; then
     sudo rm -rf /opt/nvim
     sudo tar -C /opt -xzf nvim-linux64.tar.gz
 
-    ln -s "/usr/bin" "/opt/nvim-linux64"
+    rm -f "/usr/bin/nvim"
+    sudo ln -s "/opt/nvim-linux64/bin/nvim" "/usr/bin/"
 else 
     $INSTALL_CMD $BASE_PACKAGES "neovim"
 fi
