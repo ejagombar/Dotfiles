@@ -41,9 +41,12 @@ echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
     $INSTALL_CMD $BASE_PACKAGES
+
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
     sudo rm -rf /opt/nvim
     sudo tar -C /opt -xzf nvim-linux64.tar.gz
+
+    ln -s "/usr/bin" "/opt/nvim-linux64"
 else 
     $INSTALL_CMD $BASE_PACKAGES "neovim"
 fi
