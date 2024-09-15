@@ -22,14 +22,6 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Confirm running the script
-echo "This script will replace any neovim, tmux, zsh configurations already in place. Are you sure? (y/N)"
-read -r CONFIRMATION
-if [[ $CONFIRMATION != "y" ]]; then
-    echo "Script execution cancelled."
-    exit 0
-fi
-
 APT_CMD=$(which apt)
 DNF_CMD=$(which dnf)
 
@@ -110,7 +102,6 @@ ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 echo -e "${BOLD_GREEN}Adding zsh syntax highlighting path to .zshrc${RESET}"
 echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
-
 font_name="FiraCode"
 echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
 curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
@@ -119,7 +110,6 @@ mkdir -p  "$HOME/.fonts"
 echo "unzip the ${font_name}.zip"
 unzip "${font_name}.zip" -d "$HOME/.fonts/${font_name}/"
 fc-cache -fv
-break
 
 echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
 
