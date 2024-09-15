@@ -34,17 +34,18 @@ else
     exit 1
 fi
 
-BASE_PACKAGES="tmux zsh neovim ripgrep fzf curl zoxide"
+BASE_PACKAGES="tmux zsh ripgrep fzf curl zoxide"
 EXTRA_PACKAGES="bat eza luarocks gh fd-find"
 
 echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
 
 if [[ $LATEST_FLAG -eq 1 ]]; then
+    $INSTALL_CMD $BASE_PACKAGES
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
     sudo rm -rf /opt/nvim
     sudo tar -C /opt -xzf nvim-linux64.tar.gz
 else 
-    $INSTALL_CMD $BASE_PACKAGES
+    $INSTALL_CMD $BASE_PACKAGES "neovim"
 fi
 
 if [[ $EXTRA_FLAG -eq 1 ]]; then
