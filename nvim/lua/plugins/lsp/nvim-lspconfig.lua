@@ -102,7 +102,7 @@ return {
 			--    https://github.com/pmizio/typescript-tools.nvim
 			--
 			-- But for many setups, the LSP (`tsserver`) will work just fine
-			tsserver = {},
+			-- tsserver = {},
 
 			glsl_analyzer = {
 				-- cmd = { "glsl-analyzer" }, -- Make sure 'glsl-analyzer' is in your PATH
