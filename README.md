@@ -1,52 +1,71 @@
 # Dotfiles
+#### My configurations for: `Neovim` `Tmux` `Zsh`
 
-My personal dotfiles.
 
-Configurations for:
+## Installation instructions
 
--   Neovim
--   Tmux
--   Zsh
+```
+git clone https://github.com/ejagombar/Dotfiles && cd Dotfiles
+chmod +x ./install.sh
+./install.sh
+```
 
-## TODO Eventually
+`./install.sh` flags:
+- `--extra` Installs extra packages: `bat` `eza` `luarocks` `gh` `fd-find`
+- `--latest` Installs neovim from github latest archive, as opposed to using package manager
 
--   Swap out LSP-Zero
--   configure fzf
--   Properly learn tmux
--   Learn telescope file explorer more
--   Learn Fugitive
--   Write install script for the required programs
--   Add system configuration file
+## Dependencies
 
-# Cheatsheet
-
-## Global Commands
-
-'<C-H>' = Move to window on the left
-'<C-J>' = Move to window below
-'<C-K>' = Move to window above
-'<C-L>' = Move to window on the right
-
-## ZSH Commands
-
-'alias' = shows all aliases
-
-'rp' = cd Projects/Repos
-
-'q' = go to home dir and clear screen
-
-## Tmux Commands
-
-## Vim Commands
-
-'<leader>gs' = open Fugitive
-'<leader>u' = open UndoTree
-
-### Harpoon
-
-'<leader>a' = Harpoon mark file
-'<c-e>' = Harpoon quick menu
-'<leader>h' = Harpoon file 1
-'<leader>j' = Harpoon file 2
-'<leader>k' = Harpoon file 3
-'<leader>l' = Harpoon file 4
+- `neovim`
+    - `lazy.nvim`
+    - `Comment.nvim`
+    - `vim-fugitive`
+    - `gitsigns.nvim`
+    - `nvim-ts-autotag`
+    - `todo-comments.nvim`
+    - `undotree`
+    - `nvim-web-devicons`
+    - `conform.nvim`
+    - `nvim-dap`
+        - `nvim-dap-ui`
+        - `nvim-nio`
+        - `mason-nvim-dap.nvim`
+        - `nvim-dap-go`
+    - `harpoon`
+    - `indent-blankline.nvim`
+    - `lualine.nvim`
+    - `markdown-preview.nvim`
+    - `mini.files`
+    - `nvim-treesitter`
+    - `onedark.nvim`
+    - `telescope.nvim`
+        - `plenary.nvim`
+        - `telescope-fzf-native.nvim`
+        - `telescope-ui-select.nvim`
+    - `tmux.nvim`
+    - `trouble.nvim`
+- `tmux`
+    - `tpm`
+    - `tmux-onedark-theme`
+    - `tmux-resurrect`
+    - `tmux.nvim`
+- `zsh`
+    - `zinit`
+        - `zsh-syntax-highlighting`
+        - `zsh-completions`
+        - `zsh-autosuggestions`
+        - `fzf-tab`
+        - `OMZP::git`
+        - `OMZP::vi-mode`
+        - `OMZP::command-not-found`
+    - `starship`
+- `ripgrep`
+- `fzf`
+- `curl`
+- `zoxide`
+- `git`
+- `bat`
+- `eza`
+- `luarocks`
+- `gh`
+- `fd-find`
