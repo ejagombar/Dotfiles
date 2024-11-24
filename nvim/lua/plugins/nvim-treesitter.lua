@@ -18,7 +18,9 @@ return { -- Highlight, edit, and navigate code
 		},
 		indent = { enable = true, disable = { "ruby" } },
 	},
+
 	config = function(_, opts)
+		vim.treesitter.language.register("glsl", { "vert", "frag", "geom" })
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
 		-- Prefer git instead of curl in order to improve connectivity in some environments

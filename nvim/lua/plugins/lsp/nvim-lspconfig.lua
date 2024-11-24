@@ -106,7 +106,7 @@ return {
 
 			glsl_analyzer = {
 				-- cmd = { "glsl-analyzer" }, -- Make sure 'glsl-analyzer' is in your PATH
-				filetypes = { "vertexshader", "fragmentshader", "glsl" }, -- Add your custom filetypes here
+				-- filetypes = { "vertexshader", "vs", "fragmentshader", "fs", "glsl" }, -- Add your custom filetypes here
 				-- root_dir = vim.loop.cwd, -- Set root directory (optional)
 			},
 
@@ -150,8 +150,9 @@ return {
 
 		vim.filetype.add({
 			extension = {
-				vert = "vertexshader",
-				frag = "fragmentshader",
+				vert = "vert",
+				frag = "frag",
+				geom = "geom",
 			},
 		})
 	end,
