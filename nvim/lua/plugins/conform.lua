@@ -35,7 +35,7 @@ return { -- Autoformat
 		},
 		formatters = {
 			black = {
-				prepend_args = { "--line-length", "100" },
+				prepend_args = { "--line-length", "200" },
 				-- NOTE: Here is how to add custom location of formatter: command = <location>
 			},
 		},

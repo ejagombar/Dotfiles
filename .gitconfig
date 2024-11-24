@@ -3,3 +3,5 @@
 	name = Edward Agombar
 [pager]
 	branch = false
+[core]
+	editor = nvim
