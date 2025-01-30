@@ -12,6 +12,7 @@ local config = function()
 				".git/",
 				"venv",
 				".venv",
+				"__pycache__",
 			},
 		},
 		pickers = {

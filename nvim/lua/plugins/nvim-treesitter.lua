@@ -3,11 +3,6 @@ return { -- Highlight, edit, and navigate code
 	build = ":TSUpdate",
 	lazy = false,
 	opts = {
-
-		ensure_installed = {},
-		-- "cpp", "go", "bash", "python", "bash", "dockerfile", "diff", "yaml", "c", "lua", "vim", "vimdoc",
-		-- "query", "css", "html", "typescript", "javascript", "markdown", "markdown_inline", "gitignore", "glsl",
-		-- Autoinstall languages that are not installed
 		auto_install = true,
 		highlight = {
 			enable = true,
