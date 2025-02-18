@@ -1,32 +1,3 @@
-# FROM alpine:3.21
-#
-# WORKDIR /recon
-#
-# ENV TERM=xterm-256color \
-#     EDITOR=nvim
-#
-# RUN apk add go python3 py3-pip
-#
-# RUN apk add neovim tmux gcc ripgrep git cmake musl-dev unzip wget curl gzip man-pages neovim-doc fd bash
-#
-# COPY . /Dotfiles
-#
-# RUN mkdir /root/.config \
-#     && ln -sf /Dotfiles/nvim /root/.config/nvim \
-#     && go install golang.org/x/tools/gopls@latest
-# # && nvim --headless +Lazy! sync +qa \
-# # && nvim --headless +"lua require('nvim-treesitter.install').update({with_sync = true})" +qall
-#
-# # Install Mason, gopls, pyright, and Treesitter parsers
-# RUN nvim --headless +"Lazy install" +qall && \
-#     nvim --headless +"MasonInstall gopls pyright" +qall && \
-#     nvim --headless +"TSInstall go python" +qall
-#
-# RUN ln -sf /Dotfiles/tmux/.tmux.conf /root/.tmux.conf \
-#     && ln -sf /Dotfiles/.bashrc /root/.bashrc
-#
-# CMD ["bash"]
-
 FROM alpine:3.21
 
 WORKDIR /recon
