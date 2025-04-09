@@ -1,7 +1,7 @@
 # Path Stuff
 export VCPKG_ROOT=/home/ejago/Repos/Forks/vcpkg
 export PYNT_ROOT=/home/ejago/.local/lib/python3.12/site-packages
-export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh:/home/ejago/.local/bin:$VCPKG_ROOT:$PYNT_ROOT
+export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh:/home/ejago/.local/bin:$VCPKG_ROOT:$PYNT_ROOT:$HOME/.cargo/bin
 
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -83,7 +83,7 @@ alias v='nvim'
 alias cd='z'
 alias lg='lazygit'
 alias cat="bat"
-alias build_explorer='cd ~/Repos/Projects/WikiMapper/explorer && cmake --build build && cd ./build && ./WikiMapperExplorer'
+alias build_explorer='cd ~/Repos/Projects/WikiMapper/ && cmake --build build && cd ./build && ./WikiMapperExplorer'
 alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd ./build && ./OpenGLTutorial'
 bindkey -s "^F" '^Qfg^M'
 bindkey -a -r ':' #Disable vi command mode

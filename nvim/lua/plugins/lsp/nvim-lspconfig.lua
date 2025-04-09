@@ -3,7 +3,6 @@ return {
 	dependencies = {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 		{ "j-hui/fidget.nvim", opts = {} },
 		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
@@ -32,6 +31,14 @@ return {
 				map("K", vim.lsp.buf.hover)
 				map("gD", vim.lsp.buf.declaration)
 			end,
+		})
+
+		vim.filetype.add({
+			extension = {
+				vert = "vert",
+				frag = "frag",
+				geom = "geom",
+			},
 		})
 
 		local capabilities = vim.tbl_deep_extend(
@@ -74,22 +81,12 @@ return {
 			},
 		}
 
-		require("mason-tool-installer").setup({ ensure_installed = vim.tbl_keys(servers) })
-
 		require("mason-lspconfig").setup_handlers({
 			function(server_name)
 				local server = servers[server_name] or {}
 				server.capabilities = vim.tbl_deep_extend("force", capabilities, server.capabilities or {})
 				require("lspconfig")[server_name].setup(server)
 			end,
-		})
-
-		vim.filetype.add({
-			extension = {
-				vert = "vert",
-				frag = "frag",
-				geom = "geom",
-			},
 		})
 	end,
 }

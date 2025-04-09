@@ -30,6 +30,8 @@ local config = function()
 	vim.keymap.set("n", "<leader>or", builtin.resume)
 	vim.keymap.set("n", "<leader>ob", builtin.buffers)
 	vim.keymap.set("n", "<leader>og", builtin.git_files)
+	vim.keymap.set("n", "<leader>ds", builtin.lsp_document_symbols)
+	vim.keymap.set("n", "<leader>ws", builtin.lsp_workspace_symbols)
 
 	vim.keymap.set("n", "<leader>vh", function()
 		builtin.help_tags()

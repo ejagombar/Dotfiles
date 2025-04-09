@@ -28,9 +28,11 @@ RUN go install golang.org/x/tools/gopls@latest \
     && ln -sf /root/go/bin/gopls /usr/local/bin/gopls
 
 # Install Mason, LSPs, and Treesitter parsers in a single headless session
-RUN nvim --headless +"Lazy! sync" +qall
-RUN nvim --headless +"MasonInstall gopls " +qall
+# RUN nvim --headless +"Lazy! sync" +qall
+# RUN nvim --headless +"MasonInstall gopls " +qall
 # RUN nvim --headless +"TSInstall go python" +qall
 
 # Default to Bash shell
 CMD ["bash"]
+
+
