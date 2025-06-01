@@ -83,7 +83,7 @@ alias v='nvim'
 alias cd='z'
 alias lg='lazygit'
 alias cat="bat"
-alias build_explorer='cd ~/Repos/Projects/WikiMapper/ && cmake --build build && cd ./build && ./WikiMapperExplorer'
+alias build_explorer='cd ~/Repos/Projects/WikiMapper/ && cmake --build build --parallel && cd ./build && ./WikiMapperExplorer'
 alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd ./build && ./OpenGLTutorial'
 bindkey -s "^F" '^Qfg^M'
 bindkey -a -r ':' #Disable vi command mode

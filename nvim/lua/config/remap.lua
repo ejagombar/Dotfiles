@@ -8,7 +8,7 @@ vim.keymap.set({ "n", "v" }, "<Leader>e", "%")
 
 vim.keymap.set("n", "cp", "+y")
 vim.keymap.set("n", "cv", "+p")
-vim.keymap.set("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>p", [["_dP]]) -- Replace the current selected item with the string in the copy buffer
 
 -- Dont put deleted items into buffer when using x
 vim.keymap.set("n", "x", '"_x')
@@ -29,5 +29,5 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float) -- <leader>ca to accept code actions
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)

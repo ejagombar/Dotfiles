@@ -12,11 +12,16 @@ return {
 			},
 		})
 
+		local toggle_opts = {
+			border = "rounded",
+			title_pos = "center",
+		}
+
 		vim.keymap.set("n", "<leader>a", function()
 			harpoon:list():add()
 		end)
 		vim.keymap.set("n", "<C-e>", function()
-			harpoon.ui:toggle_quick_menu(harpoon:list())
+			harpoon.ui:toggle_quick_menu(harpoon:list(), toggle_opts)
 		end)
 		vim.keymap.set("n", "<leader>h", function()
 			harpoon:list():select(1)
