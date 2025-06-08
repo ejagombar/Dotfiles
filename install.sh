@@ -34,7 +34,7 @@ else
     exit 1
 fi
 
-BASE_PACKAGES="tmux zsh ripgrep fzf curl zoxide"
+BASE_PACKAGES="tmux zsh ripgrep fzf curl zoxide unzip fontconfig"
 EXTRA_PACKAGES="bat eza luarocks gh fd-find"
 
 #OpenMP Stuff
@@ -83,6 +83,10 @@ git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 echo -e "${BOLD_GREEN}Setting symlinks...${RESET}"
 cwd=$(pwd)
 
+if [ -d "$HOME/.config" ]; then
+    mkdir "$HOME/.config" 
+fi
+
 echo "Setting tmux symlink"
 rm -f "$HOME/.tmux.conf"
 ln -sf "$cwd/tmux/.tmux.conf" "$HOME/.tmux.conf"
@@ -121,7 +125,7 @@ fc-cache -fv
 
 echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
 
-chsh -s $(which zsh)
+sudo chsh -s $(which zsh)
 zsh
 
 echo -e "${BOLD_GREEN}Finished!${RESET}"
