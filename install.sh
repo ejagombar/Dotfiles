@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 BOLD_RED="\e[1;31m"
 BOLD_GREEN="\e[1;32m"
@@ -57,7 +57,7 @@ fi
 
 if [[ $EXTRA_FLAG -eq 1 ]]; then
     $INSTALL_CMD $EXTRA_PACKAGES
-    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+    curl https://pyenv.run | bash
 
     mkdir -p ~/.local/bin
     ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -83,7 +83,7 @@ git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 echo -e "${BOLD_GREEN}Setting symlinks...${RESET}"
 cwd=$(pwd)
 
-if [ -d "$HOME/.config" ]; then
+if [ ! -d "$HOME/.config" ]; then
     mkdir "$HOME/.config" 
 fi
 
@@ -111,21 +111,37 @@ echo "Setting prettier symlink"
 rm -f "$HOME/.prettierrc"
 ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 
-echo -e "${BOLD_GREEN}Adding zsh syntax highlighting path to .zshrc${RESET}"
-echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+echo -e "${BOLD_GREEN}Setting up scripts...${RESET}"
+if [ ! -d "$HOME/bin" ]; then
+    mkdir "$HOME/bin" 
+fi
+
+rm -f "$HOME/bin/tmux-sessioniser"
+ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$HOME/bin/tmux-sessioniser"
+
+rm -f "$HOME/bin/github"
+ln -sf "$cwd/scripts/open-github.sh" "$HOME/bin/github"
+
+# echo -e "${BOLD_GREEN}Adding zsh syntax highlighting path to .zshrc${RESET}"
+# echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
 
 font_name="FiraCode"
 echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
 curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
 echo "creating fonts folder: ${HOME}/.fonts"
-mkdir -p  "$HOME/.fonts"
+mkdir -p  "$HOME/.local/share/fonts/"
 echo "unzip the ${font_name}.zip"
-unzip "${font_name}.zip" -d "$HOME/.fonts/${font_name}/"
-fc-cache -fv
+unzip "${font_name}.zip" -d "$HOME/.local/share/fonts/${font_name}/"
+fc-cache -f
+
+
+ZSH_PATH=$(command -v zsh)
+if ! grep -q "$ZSH_PATH" /etc/shells; then
+    echo "$ZSH_PATH" | sudo tee -a /etc/shells
+fi
 
 echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
-
-sudo chsh -s $(which zsh)
+chsh -s "$ZSH_PATH"
 zsh
 
 echo -e "${BOLD_GREEN}Finished!${RESET}"
