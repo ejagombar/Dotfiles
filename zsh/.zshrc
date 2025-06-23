@@ -1,4 +1,3 @@
-# Path Stuff
 export VCPKG_ROOT=/home/ejago/Repos/Forks/vcpkg
 export PYNT_ROOT=/home/ejago/.local/lib/python3.12/site-packages
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/modules.sh:/home/ejago/.local/bin:$VCPKG_ROOT:$PYNT_ROOT:$HOME/.cargo/bin:$HOME/bin
@@ -80,13 +79,15 @@ alias rw='cd ~/Repos/Work'
 alias vzrc="nvim ~/.zshrc"
 alias szrc="source ~/.zshrc"
 alias v='nvim'
-alias cd='z'
+alias ls="exa"
+alias open='xdg-open'
 alias lg='lazygit'
 alias cat="bat"
-alias open='xdg-open'
+
 alias build_explorer='cd ~/Repos/Projects/WikiMapper/ && cmake --build build --parallel && cd ./build && ./WikiMapperExplorer'
 alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd ./build && ./OpenGLTutorial'
-# bindkey -s ^f "tmux-sessioniser\n"
+
+bindkey -s ^f "tmux-sessioniser\n"
 bindkey -a -r ':' #Disable vi command mode
 
 type starship_zle-keymap-select >/dev/null || \
