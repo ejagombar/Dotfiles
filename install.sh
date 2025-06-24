@@ -1,147 +1,265 @@
 #!/usr/bin/env bash
 
-BOLD_RED="\e[1;31m"
-BOLD_GREEN="\e[1;32m"
-RESET="\e[0m"
+set -e
 
-# Function to show usage
-usage() {
-    echo -e "${BOLD_RED}Usage: $0 [--extra] [--latest]${RESET}"
+BLUE="\033[1;34m"
+GREEN="\033[32m"
+BOLD_GREEN="\e[1;32m"
+BOLD="\033[1m" 
+NC="\033[0m"
+
+########### System Detection ###########
+
+detectPackageManager() {
+  if command -v apt-get >/dev/null; then
+    PKG_MANAGER="apt-get"
+    INSTALL_CMD="apt-get install -y"
+  elif command -v dnf >/dev/null; then
+    PKG_MANAGER="dnf"
+    INSTALL_CMD="dnf install -y"
+  elif command -v yum >/dev/null; then
+    PKG_MANAGER="yum"
+    INSTALL_CMD="yum install -y"
+  elif command -v pacman >/dev/null; then
+    PKG_MANAGER="pacman"
+    INSTALL_CMD="pacman -Sy"
+  elif command -v apk >/dev/null; then
+    PKG_MANAGER="apk"
+    INSTALL_CMD="apk add -y"
+  else
+    echo "No supported package manager found!"
     exit 1
+  fi
 }
 
-# Parse arguments
-EXTRA_FLAG=0
-LATEST_FLAG=0
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --extra) EXTRA_FLAG=1 ;;
-        --latest) LATEST_FLAG=1 ;;
-        *) usage ;;
-    esac
-    shift
-done
 
-APT_CMD=$(which apt)
-DNF_CMD=$(which dnf)
+detect_arch() {
+  ARCH=$(uname -m)
+  case "$ARCH" in
+    x86_64|amd64)
+      ARCH="x86_64"
+      ;;
+    aarch64|arm64)
+      ARCH="aarch64"
+      ;;
+    *)
+      echo "Unsupported architecture: $ARCH"
+      exit 1
+      ;;
+  esac
+}
 
-if [[ ! -z $APT_CMD ]]; then
-    INSTALL_CMD="sudo apt install -y"
-elif [[ ! -z $DNF_CMD ]]; then
-    INSTALL_CMD="sudo dnf install -y"
-else
-    echo -e "${BOLD_RED}Error: can't install packages${RESET}"
-    exit 1
-fi
+########### CLI ###########
 
-BASE_PACKAGES="tmux zsh ripgrep fzf curl zoxide unzip fontconfig"
-EXTRA_PACKAGES="bat eza luarocks gh fd-find"
+printHelp() {
+    echo -e "\n${BLUE}===== HELP =====${NC}"
+    echo -e "\n${BOLD}Full Install:${NC}"
+    echo -e " neovim\n tmux\n zsh\n ripgrep\n fzf\n curl\n zoxide\n git\n bat\n eza\n gh\n fd-find\n"
+    echo -e "${BOLD}Bare Install:${NC}"
+    echo -e " neovim\n tmux\n zsh\n"
+}
 
-#OpenMP Stuff
-#sudo dnf install openmpi openmpi-devel
 
-echo -e "${BOLD_GREEN}Installing dependencies...${RESET}"
+printBanner() {
+    echo ""
+    echo -e "${BLUE}██████╗  ██████╗ ████████╗${GREEN}███████╗██╗██╗     ███████╗███████╗"
+    echo -e "${BLUE}██╔══██╗██╔═══██╗╚══██╔══╝${GREEN}██╔════╝██║██║     ██╔════╝██╔════╝"
+    echo -e "${BLUE}██║  ██║██║   ██║   ██║   ${GREEN}█████╗  ██║██║     █████╗  ███████╗"
+    echo -e "${BLUE}██║  ██║██║   ██║   ██║   ${GREEN}██╔══╝  ██║██║     ██╔══╝  ╚════██║"
+    echo -e "${BLUE}██████╔╝╚██████╔╝   ██║   ${GREEN}██║     ██║███████╗███████╗███████║"
+    echo -e "${BLUE}╚═════╝  ╚═════╝    ╚═╝   ${GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
+    echo -e "${NC}"
+    echo -e "Install and configure useful tools\n"
+    echo -e "${BOLD}Pkg Manager:${NC} ${PKG_MANAGER}, ${BOLD}Arch:${NC} ${ARCH}"
+    echo ""
+}
 
-if [[ $LATEST_FLAG -eq 1 ]]; then
-    $INSTALL_CMD $BASE_PACKAGES
 
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-    sudo rm -rf /opt/nvim
-    sudo tar -C /opt -xzf nvim-linux64.tar.gz
+promptUserInput() {
+    echo "Select option:"
+    echo -e " ${BOLD}[b]${NC} Bare Install - Essential tools only"
+    echo -e " ${BOLD}[f]${NC} Full Install - Complete install"
+    echo -e " ${BOLD}[h]${NC} Help - List the tools and plugins"
+    echo ""
 
-    rm -f "/usr/bin/nvim"
-    sudo ln -s "/opt/nvim-linux64/bin/nvim" "/usr/bin/"
-else 
-    $INSTALL_CMD $BASE_PACKAGES "neovim"
-fi
+    OPTION=""
+    while [[ "$OPTION" == "" ]]; do
+        read -rp "Enter choice (b/f/h): " choice
+        case "$choice" in
+        b|B)
+          OPTION="bare"
+          ;;
+        f|F)
+          OPTION="full"
+          ;;
+        h|H)
+          OPTION="help"
+          ;;
+        *)
+          echo "Invalid choice."
+          OPTION=""
+          ;;
+        esac
+    done
+}
 
-if [[ $EXTRA_FLAG -eq 1 ]]; then
-    $INSTALL_CMD $EXTRA_PACKAGES
-    curl https://pyenv.run | bash
+########### Install Scripts ###########
 
-    mkdir -p ~/.local/bin
+install_neovim() {
+  echo "Installing Neovim"
+
+  case "$ARCH" in
+    x86_64)
+      NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+      ;;
+    aarch64)
+      NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.tar.gz"
+      ;;
+    *)
+      echo "No prebuilt Neovim for $ARCH"
+      exit 1
+      ;;
+  esac
+
+  curl -LO "$NVIM_URL"
+
+  sudo rm -rf /opt/nvim
+  sudo tar -C /opt -xzf "$(basename "$NVIM_URL")"
+
+  sudo rm -f /usr/bin/nvim
+  sudo ln -s /opt/nvim-linux*/bin/nvim /usr/bin/nvim
+
+  rm -f "$(basename "$NVIM_URL")"
+}
+
+
+installFull() {
+    FULL_PACKAGES="tmux zsh ripgrep fzf curl zoxide unzip fontconfig gh fd-find eza bat luarocks"
+
+    echo -e "${BOLD_GREEN}Installing tools...${RESET}"
+
+    if [[ ${PKG_MANAGER} == "apt-get" || ${PKG_MANAGER} == "yum" ]]; then # Slow to get new updates
+        install_neovim
+        $INSTALL_CMD $FULL_PACKAGES
+    else 
+        $INSTALL_CMD $FULL_PACKAGES "neovim"
+    fi
+
+    echo -e "${BOLD_GREEN}Installing OMZ${NC}"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    echo -e "${BOLD_GREEN}Installing zsh autosuggestions${NC}"
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+    echo -e "${BOLD_GREEN}Installing zsh syntax highlighting${NC}"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+    echo -e "${BOLD_GREEN}Installing Spaceship prompt${NC}"
+    git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
+
+    echo -e "${BOLD_GREEN}Installing Tmux TPM${NC}"
+    git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+
+    ################################################################################
+
+    echo -e "${BOLD_GREEN}Setting symlinks...${NC}"
+    cwd=$(pwd)
+
+    if [ ! -d "$HOME/.config" ]; then
+        mkdir "$HOME/.config" 
+    fi
+
+    echo -e "${GREEN}Setting tmux symlink${NC}"
+    rm -f "$HOME/.tmux.conf"
+    ln -sf "$cwd/tmux/.tmux.conf" "$HOME/.tmux.conf"
+
+    echo -e "${GREEN}Setting zsh symlink${NC}"
+    rm -f "$HOME/.zshrc"
+    ln -sf "$cwd/zsh/.zshrc" "$HOME/.zshrc"
+
+    echo -e "${GREEN}Setting nvim symlink${NC}"
+    rm -rf "$HOME/.config/nvim"
+    ln -sf "$cwd/nvim" "$HOME/.config/nvim"
+
+    echo -e ${GREEN}"Setting starship symlink${NC}"
+    rm -f "$HOME/.config/starship.toml"
+    ln -sf "$cwd/zsh/starship.toml" "$HOME/.config/starship.toml"
+
+    echo -e "${GREEN}Setting gitconfig symlink${NC}"
+    rm -f "$HOME/.gitconfig"
+    ln -sf "$cwd/.gitconfig" "$HOME/.gitconfig"
+
+    echo -e "${GREEN}Setting prettier symlink${NC}\n"
+    rm -f "$HOME/.prettierrc"
+    ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
+
+    echo -e "${BOLD_GREEN}Setting up scripts...${RESET}"
+    if [ ! -d "$HOME/bin" ]; then
+        mkdir "$HOME/bin" 
+    fi
+
     ln -s /usr/bin/batcat ~/.local/bin/bat
-fi
 
-echo -e "${BOLD_GREEN}Cloning repos...${RESET}"
+    rm -f "$HOME/bin/tmux-sessioniser"
+    ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$HOME/bin/tmux-sessioniser"
 
-echo -e "${BOLD_GREEN}Installing OMZ${RESET}"
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    rm -f "$HOME/bin/github"
+    ln -sf "$cwd/scripts/open-github.sh" "$HOME/bin/github"
+    
+    ############################################################################
 
-echo -e "${BOLD_GREEN}Installing zsh autosuggestions${RESET}"
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    font_name="FiraCode"
+    echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
+    curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
+    echo "creating fonts folder: ${HOME}/.fonts"
+    mkdir -p  "$HOME/.local/share/fonts/"
+    echo -e "${GREEN}Unzipping the ${font_name}.zip${NC}"
+    unzip "${font_name}.zip" -d "$HOME/.local/share/fonts/${font_name}/"
+    fc-cache -f
 
-echo -e "${BOLD_GREEN}Installing zsh syntax highlighting${RESET}"
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    ZSH_PATH=$(command -v zsh)
+    if ! grep -q "$ZSH_PATH" /etc/shells; then
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells
+    fi
 
-echo -e "${BOLD_GREEN}Installing Spaceship prompt${RESET}"
-git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
+    echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
+    chsh -s "$ZSH_PATH"
+    zsh
 
-echo -e "${BOLD_GREEN}Installing Tmux TPM${RESET}"
-git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+    echo -e "${BOLD_GREEN}Finished!${RESET}"
+}
 
-echo -e "${BOLD_GREEN}Setting symlinks...${RESET}"
-cwd=$(pwd)
+########### Main Program ###########
 
-if [ ! -d "$HOME/.config" ]; then
-    mkdir "$HOME/.config" 
-fi
+performCommands() {
+    OPTION=""
 
-echo "Setting tmux symlink"
-rm -f "$HOME/.tmux.conf"
-ln -sf "$cwd/tmux/.tmux.conf" "$HOME/.tmux.conf"
+    while [[ ! ( "$OPTION" == "bare" || "$OPTION" == "full" ) ]]; do
+    promptUserInput
 
-echo "Setting zsh symlink"
-rm -f "$HOME/.zshrc"
-ln -sf "$cwd/zsh/.zshrc" "$HOME/.zshrc"
+        case "$OPTION" in
+        help)
+            printHelp
+          ;;
+        small)
+            echo "Performing small installation..."
+          ;;
+        full)
+            installFull
+          ;;
+        esac
+    done
 
-echo "Setting nvim symlink"
-rm -rf "$HOME/.config/nvim"
-ln -sf "$cwd/nvim" "$HOME/.config/nvim"
+    echo -e "\n${GREEN}Exiting.${NC}"
+}
 
-echo "Setting starship symlink"
-rm -f "$HOME/.config/starship.toml"
-ln -sf "$cwd/zsh/starship.toml" "$HOME/.config/starship.toml"
+main() {
+    detectPackageManager
+    detectArch
 
-echo "Setting gitconfig symlink"
-rm -f "$HOME/.gitconfig"
-ln -sf "$cwd/.gitconfig" "$HOME/.gitconfig"
+    printBanner
 
-echo "Setting prettier symlink"
-rm -f "$HOME/.prettierrc"
-ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
+    performCommands
+}
 
-echo -e "${BOLD_GREEN}Setting up scripts...${RESET}"
-if [ ! -d "$HOME/bin" ]; then
-    mkdir "$HOME/bin" 
-fi
-
-rm -f "$HOME/bin/tmux-sessioniser"
-ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$HOME/bin/tmux-sessioniser"
-
-rm -f "$HOME/bin/github"
-ln -sf "$cwd/scripts/open-github.sh" "$HOME/bin/github"
-
-# echo -e "${BOLD_GREEN}Adding zsh syntax highlighting path to .zshrc${RESET}"
-# echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
-
-font_name="FiraCode"
-echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
-curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
-echo "creating fonts folder: ${HOME}/.fonts"
-mkdir -p  "$HOME/.local/share/fonts/"
-echo "unzip the ${font_name}.zip"
-unzip "${font_name}.zip" -d "$HOME/.local/share/fonts/${font_name}/"
-fc-cache -f
-
-
-ZSH_PATH=$(command -v zsh)
-if ! grep -q "$ZSH_PATH" /etc/shells; then
-    echo "$ZSH_PATH" | sudo tee -a /etc/shells
-fi
-
-echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
-chsh -s "$ZSH_PATH"
-zsh
-
-echo -e "${BOLD_GREEN}Finished!${RESET}"
+main "$@"
