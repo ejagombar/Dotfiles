@@ -33,7 +33,7 @@ detectPackageManager() {
 }
 
 
-detect_arch() {
+detectArch() {
   ARCH=$(uname -m)
   case "$ARCH" in
     x86_64|amd64)

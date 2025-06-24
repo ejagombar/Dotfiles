@@ -22,4 +22,3 @@ jobs:
             cd /var/www/dots
             git pull
             sudo nginx -s reload
-            cp install.sh install.txt
