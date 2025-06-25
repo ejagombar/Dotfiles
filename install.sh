@@ -103,6 +103,13 @@ promptUserInput() {
     done
 }
 
+promptForSudo() {
+    if ! sudo -v </dev/tty; then
+      echo "Failed to get sudo access. Exiting."
+      exit 1
+    fi
+}
+
 ########### Install Scripts ###########
 
 install_neovim() {
@@ -134,15 +141,17 @@ install_neovim() {
 
 
 installFull() {
-    FULL_PACKAGES="tmux zsh ripgrep fzf curl zoxide unzip fontconfig gh fd-find eza bat luarocks"
+    promptForSudo
 
-    echo -e "${BOLD_GREEN}Installing tools...${RESET}"
+    FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza bat luarocks git"
+
+    echo -e "${BOLD_GREEN}Installing tools...${NC}"
 
     if [[ ${PKG_MANAGER} == "apt-get" || ${PKG_MANAGER} == "yum" ]]; then # Slow to get new updates
         install_neovim
         $INSTALL_CMD $FULL_PACKAGES
     else 
-        $INSTALL_CMD $FULL_PACKAGES "neovim"
+        sudo $INSTALL_CMD $FULL_PACKAGES "neovim"
     fi
 
     echo -e "${BOLD_GREEN}Installing OMZ${NC}"
@@ -193,7 +202,7 @@ installFull() {
     rm -f "$HOME/.prettierrc"
     ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
 
-    echo -e "${BOLD_GREEN}Setting up scripts...${RESET}"
+    echo -e "${BOLD_GREEN}Setting up scripts...${NC}"
     if [ ! -d "$HOME/bin" ]; then
         mkdir "$HOME/bin" 
     fi
@@ -209,7 +218,7 @@ installFull() {
     ############################################################################
 
     font_name="FiraCode"
-    echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${RESET}"
+    echo -e ${BOLD_GREEN}"Installing Fira Code Nerd Font${NC}"
     curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
     echo "creating fonts folder: ${HOME}/.fonts"
     mkdir -p  "$HOME/.local/share/fonts/"
@@ -222,11 +231,11 @@ installFull() {
         echo "$ZSH_PATH" | sudo tee -a /etc/shells
     fi
 
-    echo -e "${BOLD_GREEN}Setting shell to zsh${RESET}"
+    echo -e "${BOLD_GREEN}Setting shell to zsh${NC}"
     chsh -s "$ZSH_PATH"
     zsh
 
-    echo -e "${BOLD_GREEN}Finished!${RESET}"
+    echo -e "${BOLD_GREEN}Finished!${NC}"
 }
 
 ########### Main Program ###########
