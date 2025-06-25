@@ -9,10 +9,6 @@
 curl -sL dots.eagombar.uk | bash
 ```
 
-`./install.sh` flags:
-- `--extra` Installs extra packages: `bat` `eza` `luarocks` `gh` `fd-find`
-- `--latest` Installs neovim from github latest archive, as opposed to using package manager
-
 ## Dependencies
 
 - `neovim`
