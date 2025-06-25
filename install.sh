@@ -84,7 +84,7 @@ promptUserInput() {
 
     OPTION=""
     while [[ "$OPTION" == "" ]]; do
-        read -rp "Enter choice (b/f/h): " choice
+        read -rp "Enter choice (b/f/h): " choice </dev/tty
         case "$choice" in
         b|B)
           OPTION="bare"

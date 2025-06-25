@@ -82,7 +82,6 @@ alias v='nvim'
 alias ls="exa"
 alias open='xdg-open'
 alias lg='lazygit'
-alias cat="bat"
 
 alias build_explorer='cd ~/Repos/Projects/WikiMapper/ && cmake --build build --parallel && cd ./build && ./WikiMapperExplorer'
 alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd ./build && ./OpenGLTutorial'
