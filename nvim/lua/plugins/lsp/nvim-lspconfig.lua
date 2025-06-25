@@ -8,6 +8,9 @@ return {
 		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 	},
 	config = function()
+		require("mason").setup()
+		require("mason-lspconfig").setup()
+
 		local diagnostic_signs = { Error = "", Warn = "", Hint = "󰠠", Info = "" }
 		for type, icon in pairs(diagnostic_signs) do
 			vim.fn.sign_define("DiagnosticSign" .. type, { text = icon, texthl = "DiagnosticSign" .. type })

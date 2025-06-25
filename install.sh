@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 BLUE="\033[1;34m"
 GREEN="\033[32m"
 BOLD_GREEN="\e[1;32m"
@@ -54,7 +52,7 @@ detectArch() {
 printHelp() {
     echo -e "\n${BLUE}===== HELP =====${NC}"
     echo -e "\n${BOLD}Full Install:${NC}"
-    echo -e " neovim\n tmux\n zsh\n ripgrep\n fzf\n curl\n zoxide\n git\n bat\n eza\n gh\n fd-find\n"
+    echo -e " neovim\n tmux\n zsh\n ripgrep\n fzf\n curl\n zoxide\n git\n eza\n gh\n fd-find\n"
     echo -e "${BOLD}Bare Install:${NC}"
     echo -e " neovim\n tmux\n zsh\n"
 }
@@ -122,7 +120,7 @@ install_neovim() {
 
   case "$ARCH" in
     x86_64)
-      NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+      NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz"
       ;;
     aarch64)
       NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.tar.gz"
@@ -148,7 +146,7 @@ install_neovim() {
 installFull() {
     promptForSudo
 
-    FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza bat luarocks git"
+    FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza luarocks git make"
 
     echo -e "${BOLD_GREEN}Installing tools...${NC}"
 
@@ -214,8 +212,6 @@ installFull() {
     if [ ! -d "$HOME/bin" ]; then
         mkdir "$HOME/bin" 
     fi
-
-    ln -s /usr/bin/batcat ~/.local/bin/bat
 
     rm -f "$HOME/bin/tmux-sessioniser"
     ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$HOME/bin/tmux-sessioniser"
