@@ -104,9 +104,14 @@ promptUserInput() {
 }
 
 promptForSudo() {
-    if ! sudo -v </dev/tty; then
-      echo "Failed to get sudo access. Exiting."
-      exit 1
+    USE_SUDO=""
+    if [ "$(id -u)" -ne 0 ]; then
+      if command -v sudo >/dev/null; then
+        USE_SUDO="sudo"
+      else
+        echo "Failed to get sudo access. Exiting."
+        exit 1
+      fi
     fi
 }
 
@@ -130,17 +135,20 @@ install_neovim() {
 
   curl -LO "$NVIM_URL"
 
-  sudo rm -rf /opt/nvim
-  sudo tar -C /opt -xzf "$(basename "$NVIM_URL")"
+  $USE_SUDO rm -rf /opt/nvim
+  $USE_SUDO tar -C /opt -xzf "$(basename "$NVIM_URL")"
 
-  sudo rm -f /usr/bin/nvim
-  sudo ln -s /opt/nvim-linux*/bin/nvim /usr/bin/nvim
+  $USE_SUDO rm -f /usr/bin/nvim
+  $USE_SUDO ln -s /opt/nvim-linux*/bin/nvim /usr/bin/nvim
 
   rm -f "$(basename "$NVIM_URL")"
 }
 
 
 installFull() {
+    echo -e "${BOLD_GREEN}Cloning dotfiles repository...${NC}"
+    git clone https://github.com/ejagombar/Dotfiles.git
+
     promptForSudo
 
     FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza bat luarocks git"
@@ -151,7 +159,7 @@ installFull() {
         install_neovim
         $INSTALL_CMD $FULL_PACKAGES
     else 
-        sudo $INSTALL_CMD $FULL_PACKAGES "neovim"
+        $USE_SUDO $INSTALL_CMD $FULL_PACKAGES "neovim"
     fi
 
     echo -e "${BOLD_GREEN}Installing OMZ${NC}"
@@ -172,7 +180,7 @@ installFull() {
     ################################################################################
 
     echo -e "${BOLD_GREEN}Setting symlinks...${NC}"
-    cwd=$(pwd)
+    cwd="$(pwd)/Dotfiles"
 
     if [ ! -d "$HOME/.config" ]; then
         mkdir "$HOME/.config" 
@@ -228,7 +236,7 @@ installFull() {
 
     ZSH_PATH=$(command -v zsh)
     if ! grep -q "$ZSH_PATH" /etc/shells; then
-        echo "$ZSH_PATH" | sudo tee -a /etc/shells
+        echo "$ZSH_PATH" | $USE_SUDO tee -a /etc/shells
     fi
 
     echo -e "${BOLD_GREEN}Setting shell to zsh${NC}"
