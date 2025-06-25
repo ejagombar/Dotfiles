@@ -1,16 +1,13 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
+		{ "williamboman/mason.nvim", opts = {} },
+		{ "williamboman/mason-lspconfig.nvim", opts = {} },
 		"hrsh7th/cmp-nvim-lsp",
 		{ "j-hui/fidget.nvim", opts = {} },
 		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 	},
 	config = function()
-		require("mason").setup()
-		require("mason-lspconfig").setup()
-
 		local diagnostic_signs = { Error = "", Warn = "", Hint = "󰠠", Info = "" }
 		for type, icon in pairs(diagnostic_signs) do
 			vim.fn.sign_define("DiagnosticSign" .. type, { text = icon, texthl = "DiagnosticSign" .. type })
@@ -84,12 +81,14 @@ return {
 			},
 		}
 
-		require("mason-lspconfig").setup_handlers({
-			function(server_name)
-				local server = servers[server_name] or {}
-				server.capabilities = vim.tbl_deep_extend("force", capabilities, server.capabilities or {})
-				require("lspconfig")[server_name].setup(server)
-			end,
+		require("mason-lspconfig").setup({
+			handlers = {
+				function(server_name)
+					local server = servers[server_name] or {}
+					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+					require("lspconfig")[server_name].setup(server)
+				end,
+			},
 		})
 	end,
 }

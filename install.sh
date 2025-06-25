@@ -146,7 +146,7 @@ install_neovim() {
 installFull() {
     promptForSudo
 
-    FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza luarocks git make"
+    FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza luarocks git make cmake nodejs npm"
 
     echo -e "${BOLD_GREEN}Installing tools...${NC}"
 
