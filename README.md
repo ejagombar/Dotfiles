@@ -1,13 +1,12 @@
 # Dotfiles
 #### My configurations for: `Neovim` `Tmux` `Zsh`
 
+![image](https://github.com/user-attachments/assets/c0ee1f3e-c4dd-4929-81e0-e6ebbf8710b3)
 
 ## Installation instructions
 
 ```
-git clone https://github.com/ejagombar/Dotfiles && cd Dotfiles
-chmod +x ./install.sh
-./install.sh
+curl -sL dots.eagombar.uk | bash
 ```
 
 `./install.sh` flags:
