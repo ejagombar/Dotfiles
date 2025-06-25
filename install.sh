@@ -146,9 +146,6 @@ install_neovim() {
 
 
 installFull() {
-    echo -e "${BOLD_GREEN}Cloning dotfiles repository...${NC}"
-    git clone https://github.com/ejagombar/Dotfiles.git
-
     promptForSudo
 
     FULL_PACKAGES="tmux zsh ripgrep fzf zoxide unzip fontconfig gh fd-find eza bat luarocks git"
@@ -161,6 +158,9 @@ installFull() {
     else 
         $USE_SUDO $INSTALL_CMD $FULL_PACKAGES "neovim"
     fi
+
+    echo -e "${BOLD_GREEN}Cloning dotfiles repository...${NC}"
+    git clone https://github.com/ejagombar/Dotfiles.git
 
     echo -e "${BOLD_GREEN}Installing OMZ${NC}"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
