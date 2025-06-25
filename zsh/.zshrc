@@ -7,6 +7,9 @@ export PYENV_ROOT="$HOME/.pyenv"
 
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+export LC_ALL=en_IN.UTF-8
+export LANG=en_IN.UTF-8
+
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Install Zinit if not installed
@@ -76,8 +79,7 @@ alias rp='cd ~/Repos/Projects'
 alias rpl='cd ~/Repos/Playground'
 alias rf='cd ~/Repos/Forks'
 alias rw='cd ~/Repos/Work'
-alias vzrc="nvim ~/.zshrc"
-alias szrc="source ~/.zshrc"
+alias vzrc="nvim ~/.zshrc && source ~/.zshrc"
 alias v='nvim'
 alias ls="exa"
 alias open='xdg-open'
