@@ -23,7 +23,7 @@ vim.opt.scrolloff = 10
 
 vim.opt.updatetime = 50
 
-vim.opt.timeoutlen = 300
+-- vim.opt.timeoutlen = 450
 
 vim.opt.signcolumn = "yes"
 
@@ -44,6 +44,7 @@ vim.filetype.add({
 		vert = "vert",
 		frag = "frag",
 		geom = "geom",
+		library = "library",
 	},
 })
 
@@ -57,3 +58,18 @@ augroup CursorLineNrHighlight
   autocmd VimEnter * highlight CursorLine ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 augroup END
 ]])
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*.library",
+	callback = function()
+		vim.bo.filetype = "library"
+	end,
+})
+
+require("qs_lint").setup({
+	cmd = "/home/ejago/Repos/Work/QS-Lint/qs_lint",
+	filetypes = { "library", "module" },
+	debounce_time = 300,
+	use_json = true,
+	auto_save = true,
+})

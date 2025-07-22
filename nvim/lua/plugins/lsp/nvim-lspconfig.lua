@@ -3,7 +3,7 @@ return {
 	dependencies = {
 		{ "williamboman/mason.nvim", opts = {} },
 		"williamboman/mason-lspconfig.nvim",
-		"hrsh7th/cmp-nvim-lsp",
+		"saghen/blink.cmp",
 		{ "j-hui/fidget.nvim", opts = {} },
 		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 	},
@@ -41,11 +41,12 @@ return {
 			},
 		})
 
-		local capabilities = vim.tbl_deep_extend(
-			"force",
-			vim.lsp.protocol.make_client_capabilities(),
-			require("cmp_nvim_lsp").default_capabilities()
-		)
+		-- local capabilities = vim.tbl_deep_extend(
+		-- 	"force",
+		-- 	vim.lsp.protocol.make_client_capabilities(),
+		-- 	require("cmp_nvim_lsp").default_capabilities()
+		-- )
+		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 		--  Add any additional override configuration in the following tables. Available keys are:
 		--  - cmd (table): Override the default command used to start the server

@@ -143,6 +143,35 @@ install_neovim() {
 }
 
 
+prepareDotfiles() {
+    echo -e "${BOLD_GREEN}Preparing dotfiles...${NC}"
+    REPO_URL="https://github.com/ejagombar/Dotfiles.git"
+    REPO_DIR="Dotfiles"
+
+    if [ -d "$REPO_DIR/.git" ]; then
+        cd "$REPO_DIR" || exit 1
+        CURRENT_REMOTE=$(git config --get remote.origin.url)
+
+        if [[ "$CURRENT_REMOTE" == "$REPO_URL" ]]; then
+            echo -e "${GREEN}Dotfiles repo already exists and is valid. Pulling latest...${NC}"
+            git pull --rebase
+        else
+            echo -e "${BLUE}Existing directory '$REPO_DIR' is not the expected repo. Backing up...${NC}"
+            cd ..
+            mv "$REPO_DIR" "${REPO_DIR}_backup_$(date +%s)"
+            echo -e "${GREEN}Cloning correct dotfiles repo...${NC}"
+            git clone "$REPO_URL"
+        fi
+        cd ..
+    else
+        echo -e "${GREEN}Cloning dotfiles repo...${NC}"
+        git clone "$REPO_URL"
+    fi
+
+    cwd="$(pwd)/$REPO_DIR"
+}
+
+
 installFull() {
     promptForSudo
 
@@ -157,8 +186,7 @@ installFull() {
         $USE_SUDO $INSTALL_CMD $FULL_PACKAGES "neovim"
     fi
 
-    echo -e "${BOLD_GREEN}Cloning dotfiles repository...${NC}"
-    git clone https://github.com/ejagombar/Dotfiles.git
+    cwd="$(pwd)/$REPO_DIR"
 
     echo -e "${BOLD_GREEN}Installing OMZ${NC}"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -178,7 +206,8 @@ installFull() {
     ################################################################################
 
     echo -e "${BOLD_GREEN}Setting symlinks...${NC}"
-    cwd="$(pwd)/Dotfiles"
+    echo $REPO_DIR
+    cwd="$(pwd)/$REPO_DIR"
 
     if [ ! -d "$HOME/.config" ]; then
         mkdir "$HOME/.config" 
