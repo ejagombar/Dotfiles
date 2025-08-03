@@ -8,6 +8,24 @@ return {
 		{ "folke/lazydev.nvim", ft = "lua", opts = {} },
 	},
 	config = function()
+		local border = "rounded"
+
+		vim.diagnostic.config({
+			float = {
+				border = border,
+			},
+		})
+
+		local hover = vim.lsp.buf.hover
+		---@diagnostic disable-next-line: duplicate-set-field
+		vim.lsp.buf.hover = function()
+			return hover({
+				max_width = 100,
+				max_height = 14,
+				border = border,
+			})
+		end
+
 		local diagnostic_signs = { Error = "", Warn = "", Hint = "󰠠", Info = "" }
 		for type, icon in pairs(diagnostic_signs) do
 			vim.fn.sign_define("DiagnosticSign" .. type, { text = icon, texthl = "DiagnosticSign" .. type })

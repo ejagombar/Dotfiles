@@ -12,7 +12,29 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-local plugins = { { import = "plugins" }, { import = "plugins.lsp" } }
+local plugins = {
+	{
+		"ejagombar/onedark.nvim",
+		name = "onedark",
+		priority = 1000,
+		opts = {
+			style = "darker",
+
+			colors = {
+
+				-- bg0 = "#1f2329",
+				-- bg1 = "#1f2329",
+				-- bg2 = "#1f2329",
+			},
+		},
+		init = function()
+			require("onedark").load()
+		end,
+	},
+
+	{ import = "plugins" },
+	{ import = "plugins.lsp" },
+}
 
 local opts = {
 	defaults = {
