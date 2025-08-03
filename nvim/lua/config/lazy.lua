@@ -14,17 +14,21 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
 	{
-		"ejagombar/onedark.nvim",
+		"navarasu/onedark.nvim",
 		name = "onedark",
 		priority = 1000,
 		opts = {
 			style = "darker",
 
 			colors = {
+				bg0 = "#1e2127",
+			},
 
-				-- bg0 = "#1f2329",
-				-- bg1 = "#1f2329",
-				-- bg2 = "#1f2329",
+			highlights = {
+				FloatBorder = { fg = "#56b6c2", bg = "#1e2127" },
+				NormalFloat = { fg = "#abb2bf", bg = "#1e2127" },
+				MiniFilesNormal = { bg = "#1e2127" },
+				MiniFilesBorder = { fg = "#56b6c2", bg = "#1e2127" },
 			},
 		},
 		init = function()
@@ -58,6 +62,10 @@ local opts = {
 	},
 	change_detection = {
 		notify = false,
+	},
+
+	ui = {
+		border = "single",
 	},
 }
 

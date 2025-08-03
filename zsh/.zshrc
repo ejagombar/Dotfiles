@@ -11,6 +11,8 @@ export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/mod
 export PATH="$PATH:$HOME/.local/bin:$VCPKG_ROOT:$PYNT_ROOT:$HOME/.cargo/bin:$HOME/bin"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
+export TERM=xterm-256color
+
 ### Zinit (Plugin Manager) ----------------------
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
