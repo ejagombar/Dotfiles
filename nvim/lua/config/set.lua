@@ -101,10 +101,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 	end,
 })
 
-require("qs_lint").setup({
-	cmd = "/home/ejago/Repos/Work/QS-Lint/qs_lint",
-	filetypes = { "library", "module" },
-	debounce_time = 300,
-	use_json = true,
-	auto_save = true,
-})
+-- require("qs_lint").setup({
+-- 	cmd = "/home/ejago/Repos/Work/QS-Lint/qs_lint",
+-- 	filetypes = { "library", "module" },
+-- 	debounce_time = 300,
+-- 	use_json = true,
+-- 	auto_save = true,
+-- })
