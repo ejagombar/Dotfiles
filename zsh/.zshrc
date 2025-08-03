@@ -80,20 +80,28 @@ alias rpl='cd ~/Repos/Playground'
 alias rf='cd ~/Repos/Forks'
 alias rw='cd ~/Repos/Work'
 
-alias vzrc="nvim ~/.zshrc"
+alias vzrc="nvim ~/.zshrc && exec zsh -l" 
 alias szrc="source ~/.zshrc"
+
 alias v='nvim'
-alias ls='exa'
 alias open='xdg-open'
 alias lg='lazygit'
+alias ts='tmux-sessioniser'
 
 alias build_explorer='cd ~/Repos/Projects/WikiMapper && cmake --build build --parallel && cd build && ./WikiMapperExplorer'
 alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd build && ./OpenGLTutorial'
 
 ### Keybindings ------------------------------------------
 
-bindkey -s ^f "tmux-sessioniser\n"
 bindkey -a -r ':'  # Disable vi command mode
+
+fg-widget() {
+  BUFFER="fg"
+  zle accept-line
+}
+zle -N fg-widget
+bindkey -M vicmd ^f fg-widget
+bindkey -M viins ^f fg-widget
 
 ### Conditional Starship Fallback -------------------------------------
 
