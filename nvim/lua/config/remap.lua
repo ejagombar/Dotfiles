@@ -37,3 +37,9 @@ end)
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float) -- <leader>ca to accept code actions
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist)
+
+require("p4signs").setup({
+	auto_update = true,
+	update_debounce = 200,
+	use_mock = true, -- Set to false when you have p4 installed
+})
