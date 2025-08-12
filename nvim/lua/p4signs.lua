@@ -1,13 +1,10 @@
--- p4signs.nvim - Perforce diff signs for Neovim
--- Place this file in ~/.config/nvim/lua/p4signs.lua or as a plugin
-
 local M = {}
 
 -- Plugin configuration
 M.config = {
 	signs = {
-		add = { text = "┃", hl = "P4SignsAdd" },
-		change = { text = "┃", hl = "P4SignsChange" },
+		add = { text = "▎", hl = "P4SignsAdd" },
+		change = { text = "▎", hl = "P4SignsChange" },
 		delete = { text = "▁", hl = "P4SignsDelete" },
 	},
 	highlights = {
@@ -27,10 +24,9 @@ local timers = {}
 
 -- Sign definitions
 local function define_signs()
-	-- Define highlight groups
-	vim.api.nvim_set_hl(0, "P4SignsAdd", M.config.highlights.add)
-	vim.api.nvim_set_hl(0, "P4SignsChange", M.config.highlights.change)
-	vim.api.nvim_set_hl(0, "P4SignsDelete", M.config.highlights.delete)
+	vim.api.nvim_set_hl(0, "P4SignsAdd", vim.tbl_extend("force", M.config.highlights.add, { force = true }))
+	vim.api.nvim_set_hl(0, "P4SignsChange", vim.tbl_extend("force", M.config.highlights.change, { force = true }))
+	vim.api.nvim_set_hl(0, "P4SignsDelete", vim.tbl_extend("force", M.config.highlights.delete, { force = true }))
 
 	for sign_type, sign_config in pairs(M.config.signs) do
 		vim.fn.sign_define("P4Signs" .. sign_type:gsub("^%l", string.upper), {
@@ -40,27 +36,17 @@ local function define_signs()
 	end
 end
 
--- Parse classic diff format (like your p4 output)
 local function parse_classic_diff(diff_output, current_filepath)
 	local changes = {}
 	changes[current_filepath] = {}
 
 	for line in diff_output:gmatch("[^\r\n]+") do
-		-- Skip file headers and content lines
 		if line:match("^====") or line:match("^%-%-%-") or line:match("^[<>]") then
 			goto continue
 		end
 
-		-- Parse different change types
-		-- Format examples:
-		-- 4d3 - delete line 4 from old, affects line 3 in new
-		-- 9a9,10 - add lines 9-10 to new file after line 9 in old
-		-- 20c28 - change line 20 in old to line 28 in new
-		-- 22,23c30 - change lines 22-23 in old to line 30 in new
-
 		if line:match("^%d+[acd]") then
 			if line:match("d") then
-				-- Deletion: NdM means delete line N from old file, affects position M in new
 				local old_line, new_pos = line:match("^(%d+)d(%d+)")
 				if old_line and new_pos then
 					new_pos = tonumber(new_pos)
@@ -70,12 +56,10 @@ local function parse_classic_diff(diff_output, current_filepath)
 					})
 				end
 			elseif line:match("a") then
-				-- Addition: NaM,L means add lines M through L after line N in old
 				local after_line, start_new, end_new = line:match("^(%d+)a(%d+),?(%d*)")
 				start_new = tonumber(start_new)
 				end_new = end_new ~= "" and tonumber(end_new) or start_new
 
-				-- Mark all added lines in the new file
 				for i = start_new, end_new do
 					table.insert(changes[current_filepath], {
 						type = "add",
@@ -83,12 +67,10 @@ local function parse_classic_diff(diff_output, current_filepath)
 					})
 				end
 			elseif line:match("c") then
-				-- Change: N,McL,M means change lines N-M in old to lines L-M in new
 				local old_start, old_end, new_start, new_end = line:match("^(%d+),?(%d*)c(%d+),?(%d*)")
 				new_start = tonumber(new_start)
 				new_end = new_end ~= "" and tonumber(new_end) or new_start
 
-				-- Mark all changed lines in the new file
 				for i = new_start, new_end do
 					table.insert(changes[current_filepath], {
 						type = "change",
@@ -104,13 +86,10 @@ local function parse_classic_diff(diff_output, current_filepath)
 	return changes
 end
 
--- Parse p4 diff output (handles both unified and classic formats)
 local function parse_p4_diff(diff_output, current_filepath)
 	local changes = {}
 
-	-- Check if this is unified diff format (has @@ headers)
 	if diff_output:match("@@") then
-		-- Use unified diff parsing
 		local old_line, new_line = 1, 1
 		local current_file = nil
 
@@ -145,7 +124,6 @@ local function parse_p4_diff(diff_output, current_filepath)
 			end
 		end
 	else
-		-- Use classic diff parsing for your format
 		changes = parse_classic_diff(diff_output, current_filepath)
 	end
 
@@ -182,7 +160,6 @@ local function is_p4_file(filepath)
 		return false
 	end
 
-	-- Real p4 check
 	local handle = io.popen('p4 fstat "' .. filepath .. '" 2>/dev/null')
 	if not handle then
 		return false
@@ -194,13 +171,11 @@ local function is_p4_file(filepath)
 	return result:match("clientFile") ~= nil
 end
 
--- Get p4 diff for file
 local function get_p4_diff(filepath)
 	if not is_p4_file(filepath) then
 		return nil
 	end
 
-	-- Use unified diff format with -u flag (falls back to classic if -u not supported)
 	local cmd = 'p4 diff -u "' .. filepath .. '" 2>/dev/null'
 	local handle = io.popen(cmd)
 	if not handle then
@@ -210,7 +185,6 @@ local function get_p4_diff(filepath)
 	local diff_output = handle:read("*a")
 	handle:close()
 
-	-- If unified diff failed or returned empty, try classic diff
 	if diff_output == "" or not diff_output:match("@@") then
 		cmd = 'p4 diff "' .. filepath .. '" 2>/dev/null'
 		handle = io.popen(cmd)
@@ -272,7 +246,6 @@ end
 local function setup_autocommands()
 	local group = vim.api.nvim_create_augroup("P4Signs", { clear = true })
 
-	-- Update on file read/write
 	vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
 		group = group,
 		callback = function(args)
@@ -282,7 +255,6 @@ local function setup_autocommands()
 		end,
 	})
 
-	-- Update on text change (debounced)
 	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		group = group,
 		callback = function(args)
@@ -301,6 +273,14 @@ local function setup_autocommands()
 				vim.fn.timer_stop(timers[args.buf])
 				timers[args.buf] = nil
 			end
+		end,
+	})
+
+	-- Re-define highlights after colorscheme changes
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		group = group,
+		callback = function()
+			define_signs()
 		end,
 	})
 end
@@ -323,24 +303,6 @@ function M.setup(opts)
 		local bufnr = vim.api.nvim_get_current_buf()
 		update_buffer_signs(bufnr)
 	end, { desc = "Refresh P4 signs for current buffer" })
-
-	vim.api.nvim_create_user_command("P4SignsDebug", function()
-		local bufnr = vim.api.nvim_get_current_buf()
-		local filepath = vim.api.nvim_buf_get_name(bufnr)
-		print("P4Signs Debug Info:")
-		print("  Buffer: " .. bufnr)
-		print("  File: " .. (filepath or "none"))
-		print("  Is P4 file: " .. tostring(is_p4_file(filepath)))
-		print("  Auto update: " .. tostring(M.config.auto_update))
-
-		local diff = get_p4_diff(filepath)
-		if diff then
-			print("  Diff output length: " .. #diff)
-			print("  First 200 chars: " .. diff:sub(1, 200))
-		else
-			print("  No diff output")
-		end
-	end, { desc = "Show P4Signs debug information" })
 
 	vim.api.nvim_create_user_command("P4SignsToggle", function()
 		M.config.auto_update = not M.config.auto_update
