@@ -24,6 +24,7 @@ local timers = {}
 
 -- Sign definitions
 local function define_signs()
+	-- Define highlight groups with force=true to override colorscheme
 	vim.api.nvim_set_hl(0, "P4SignsAdd", vim.tbl_extend("force", M.config.highlights.add, { force = true }))
 	vim.api.nvim_set_hl(0, "P4SignsChange", vim.tbl_extend("force", M.config.highlights.change, { force = true }))
 	vim.api.nvim_set_hl(0, "P4SignsDelete", vim.tbl_extend("force", M.config.highlights.delete, { force = true }))
@@ -36,19 +37,22 @@ local function define_signs()
 	end
 end
 
+-- Parse classic diff format (like your p4 output)
 local function parse_classic_diff(diff_output, current_filepath)
 	local changes = {}
 	changes[current_filepath] = {}
 
 	for line in diff_output:gmatch("[^\r\n]+") do
+		-- Skip file headers and content lines
 		if line:match("^====") or line:match("^%-%-%-") or line:match("^[<>]") then
 			goto continue
 		end
 
-		if line:match("^%d+[acd]") then
+		if line:match("^%d+[acd]") or line:match("^%d+,%d+[acd]") then
 			if line:match("d") then
-				local old_line, new_pos = line:match("^(%d+)d(%d+)")
-				if old_line and new_pos then
+				-- Deletion: NdM or N,LdM means delete line(s) N(-L) from old file, affects position M in new
+				local old_start, old_end, new_pos = line:match("^(%d+),?(%d*)d(%d+)")
+				if old_start and new_pos then
 					new_pos = tonumber(new_pos)
 					table.insert(changes[current_filepath], {
 						type = "delete",
@@ -56,10 +60,12 @@ local function parse_classic_diff(diff_output, current_filepath)
 					})
 				end
 			elseif line:match("a") then
-				local after_line, start_new, end_new = line:match("^(%d+)a(%d+),?(%d*)")
+				-- Addition: NaM,L or N,LaM,L means add lines M through L after line N in old
+				local after_line, start_new, end_new = line:match("^(%d+),?%d*a(%d+),?(%d*)")
 				start_new = tonumber(start_new)
 				end_new = end_new ~= "" and tonumber(end_new) or start_new
 
+				-- Mark all added lines in the new file
 				for i = start_new, end_new do
 					table.insert(changes[current_filepath], {
 						type = "add",
@@ -67,15 +73,63 @@ local function parse_classic_diff(diff_output, current_filepath)
 					})
 				end
 			elseif line:match("c") then
+				-- Change: N,McL,M or NcL means change lines N-M in old to lines L-M in new
 				local old_start, old_end, new_start, new_end = line:match("^(%d+),?(%d*)c(%d+),?(%d*)")
+				old_start = tonumber(old_start)
+				old_end = old_end ~= "" and tonumber(old_end) or old_start
 				new_start = tonumber(new_start)
 				new_end = new_end ~= "" and tonumber(new_end) or new_start
 
-				for i = new_start, new_end do
+				-- Calculate how many lines were changed/added/deleted
+				local old_count = old_end - old_start + 1
+				local new_count = new_end - new_start + 1
+
+				if old_count > new_count then
+					-- More old lines than new lines = some deletions + changes
+					-- Mark changed lines
+					for i = new_start, new_end do
+						table.insert(changes[current_filepath], {
+							type = "change",
+							line = i,
+						})
+					end
+					-- Mark deletion at the position where deleted lines would appear
 					table.insert(changes[current_filepath], {
-						type = "change",
-						line = i,
+						type = "delete",
+						line = new_end + 1,
 					})
+				elseif old_count < new_count then
+					-- More new lines than old lines = changes + additions
+					-- Mark first line as change (if there was an old line)
+					if old_count > 0 then
+						table.insert(changes[current_filepath], {
+							type = "change",
+							line = new_start,
+						})
+						-- Mark additional lines as additions
+						for i = new_start + 1, new_end do
+							table.insert(changes[current_filepath], {
+								type = "add",
+								line = i,
+							})
+						end
+					else
+						-- All new lines are additions
+						for i = new_start, new_end do
+							table.insert(changes[current_filepath], {
+								type = "add",
+								line = i,
+							})
+						end
+					end
+				else
+					-- Same number of lines = pure changes
+					for i = new_start, new_end do
+						table.insert(changes[current_filepath], {
+							type = "change",
+							line = i,
+						})
+					end
 				end
 			end
 		end
@@ -86,10 +140,13 @@ local function parse_classic_diff(diff_output, current_filepath)
 	return changes
 end
 
+-- Parse p4 diff output (handles both unified and classic formats)
 local function parse_p4_diff(diff_output, current_filepath)
 	local changes = {}
 
+	-- Check if this is unified diff format (has @@ headers)
 	if diff_output:match("@@") then
+		-- Use unified diff parsing
 		local old_line, new_line = 1, 1
 		local current_file = nil
 
@@ -124,6 +181,7 @@ local function parse_p4_diff(diff_output, current_filepath)
 			end
 		end
 	else
+		-- Use classic diff parsing for your format
 		changes = parse_classic_diff(diff_output, current_filepath)
 	end
 
@@ -160,6 +218,7 @@ local function is_p4_file(filepath)
 		return false
 	end
 
+	-- Real p4 check
 	local handle = io.popen('p4 fstat "' .. filepath .. '" 2>/dev/null')
 	if not handle then
 		return false
@@ -171,11 +230,13 @@ local function is_p4_file(filepath)
 	return result:match("clientFile") ~= nil
 end
 
+-- Get p4 diff for file
 local function get_p4_diff(filepath)
 	if not is_p4_file(filepath) then
 		return nil
 	end
 
+	-- Use unified diff format with -u flag (falls back to classic if -u not supported)
 	local cmd = 'p4 diff -u "' .. filepath .. '" 2>/dev/null'
 	local handle = io.popen(cmd)
 	if not handle then
@@ -185,6 +246,7 @@ local function get_p4_diff(filepath)
 	local diff_output = handle:read("*a")
 	handle:close()
 
+	-- If unified diff failed or returned empty, try classic diff
 	if diff_output == "" or not diff_output:match("@@") then
 		cmd = 'p4 diff "' .. filepath .. '" 2>/dev/null'
 		handle = io.popen(cmd)
@@ -210,13 +272,16 @@ local function update_buffer_signs(bufnr)
 		return
 	end
 
+	-- Always clear existing signs first to handle undo/redo properly
+	vim.fn.sign_unplace(sign_group, { buffer = bufnr })
+
 	if not is_p4_file(filepath) then
+		buffers[bufnr] = nil
 		return
 	end
 
 	local diff_output = get_p4_diff(filepath)
 	if not diff_output then
-		vim.fn.sign_unplace(sign_group, { buffer = bufnr })
 		buffers[bufnr] = nil
 		return
 	end
@@ -227,6 +292,8 @@ local function update_buffer_signs(bufnr)
 	if file_changes and #file_changes > 0 then
 		apply_signs(bufnr, file_changes)
 		buffers[bufnr] = true
+	else
+		buffers[bufnr] = nil
 	end
 end
 
@@ -246,20 +313,20 @@ end
 local function setup_autocommands()
 	local group = vim.api.nvim_create_augroup("P4Signs", { clear = true })
 
-	vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+	-- Update on file read/write/undo/redo
+	vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "TextChanged", "TextChangedI" }, {
 		group = group,
 		callback = function(args)
 			if M.config.auto_update then
-				update_buffer_signs(args.buf)
-			end
-		end,
-	})
-
-	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-		group = group,
-		callback = function(args)
-			if M.config.auto_update and buffers[args.buf] then
-				debounced_update(args.buf)
+				if args.event == "BufReadPost" or args.event == "BufWritePost" then
+					-- Immediate update for file operations
+					update_buffer_signs(args.buf)
+				else
+					-- Debounced update for text changes
+					if buffers[args.buf] then
+						debounced_update(args.buf)
+					end
+				end
 			end
 		end,
 	})
