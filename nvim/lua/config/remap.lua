@@ -45,3 +45,26 @@ require("p4signs").setup({
 	update_debounce = 200,
 	use_mock = true, -- Set to false when you have p4 installed
 })
+
+-- Custom characters and colors
+require("p4signs").setup({
+	signs = {
+		add = { text = "│", hl = "P4SignsAdd" },
+		change = { text = "~", hl = "P4SignsChange" },
+		delete = { text = "_", hl = "P4SignsDelete" },
+	},
+	highlights = {
+		add = { fg = "#00ff00", bold = true },
+		change = { fg = "#ffff00", bold = false },
+		delete = { fg = "#ff0000", bold = true, italic = true },
+	},
+	update_debounce = 500, -- Slower updates
+})
+
+require("p4signs").setup({
+	highlights = {
+		add = { fg = "#587c0c", bg = "NONE", bold = true, ctermfg = 2 },
+		change = { fg = "#0c7d9d", bg = "NONE", bold = true, ctermfg = 4 },
+		delete = { fg = "#94151b", bg = "NONE", bold = true, ctermfg = 1 },
+	},
+})
