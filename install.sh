@@ -146,7 +146,7 @@ install_neovim() {
 prepareDotfiles() {
   echo -e "${BOLD_GREEN}Preparing dotfiles...${NC}"
   REPO_URL="https://github.com/ejagombar/Dotfiles.git"
-  REPO_PATH="${ORIG_HOME}/Dotfiles"
+  REPO_PATH="./Dotfiles"
 
   if [ -d "${REPO_PATH}/.git" ]; then
     cd "$REPO_PATH" || exit 1
@@ -188,9 +188,16 @@ setZshAsDefault() {
   if ! grep -q "$ZSH_PATH" /etc/shells; then
     echo "$ZSH_PATH" | $USE_SUDO tee -a /etc/shells >/dev/null
   fi
-  echo -e "${BOLD_GREEN}Setting default shell to zsh${NC}"
-  as_user chsh -s "$ZSH_PATH" "$ORIG_USER"
+
+  echo -e "${BOLD_GREEN}Setting default shell to zsh for ${ORIG_USER}${NC}"
+
+  if [ "$(id -u)" -eq 0 ]; then
+    chsh -s "$ZSH_PATH" "$ORIG_USER"
+  else
+    $USE_SUDO chsh -s "$ZSH_PATH" "$ORIG_USER"
+  fi
 }
+
 
 ########### Installation Types ###########
 
