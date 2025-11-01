@@ -6,6 +6,8 @@ BOLD_GREEN="\e[1;32m"
 BOLD="\033[1m" 
 NC="\033[0m"
 
+set -euo pipefail
+
 ########### System Detection ###########
 
 detectPackageManager() {
@@ -104,11 +106,14 @@ install_neovim() {
     *) echo "No prebuilt Neovim for $ARCH"; exit 1 ;;
   esac
 
-  curl -LO "$NVIM_URL"
+  TMP_FILE="/tmp/$(basename "$NVIM_URL")"
+
+  curl -fLo "$TMP_FILE" "$NVIM_URL" || { echo "Download failed"; exit 1; }
+
   $USE_SUDO rm -rf /opt/nvim
-  $USE_SUDO tar -C /opt -xzf "$(basename "$NVIM_URL")"
+  $USE_SUDO tar -C /opt -xzf "$TMP_FILE"
   $USE_SUDO ln -sf /opt/nvim-linux*/bin/nvim /usr/bin/nvim
-  rm -f "$(basename "$NVIM_URL")"
+  rm -f "$TMP_FILE"
 }
 
 prepareDotfiles() {
@@ -215,13 +220,21 @@ installFull() {
   echo -e "${BOLD_GREEN}Installing Tmux TPM${NC}"
   git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
 
-  echo -e "${BOLD_GREEN}Installing Fira Code Nerd Font${NC}"
   font_name="FiraCode"
-  curl -OL "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip"
-  mkdir -p "$HOME/.local/share/fonts/"
-  unzip -o "${font_name}.zip" -d "$HOME/.local/share/fonts/${font_name}/"
+  echo -e "${BOLD_GREEN}Installing ${font_name} Nerd Font${NC}"
+  TMP_FONT="/tmp/${font_name}.zip"
+
+  echo "Downloading ${font_name} font..."
+  curl -fL -o "$TMP_FONT" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip" || {
+    echo "Failed to download ${font_name} font"
+    exit 1
+  }
+
+  mkdir -p "$HOME/.local/share/fonts/${font_name}/"
+  unzip -o "$TMP_FONT" -d "$HOME/.local/share/fonts/${font_name}/"
   fc-cache -f
 
+  rm -f "$TMP_FONT"
   echo -e "${BOLD_GREEN}Full installation complete!${NC}"
 }
 
