@@ -8,6 +8,47 @@ NC="\033[0m"
 
 set -euo pipefail
 
+########### Privilege / Environment Setup ###########
+
+# Detect sudo
+if command -v sudo >/dev/null 2>&1; then
+  USE_SUDO="sudo"
+else
+  echo "sudo is required but not found. Please install it first."
+  exit 1
+fi
+
+# Verify we can escalate; prompt once
+echo -e "\n${BOLD_GREEN}Requesting sudo privileges (for system installs)...${NC}"
+if ! $USE_SUDO -v; then
+  echo "You need sudo privileges to run this installer."
+  exit 1
+fi
+
+# Keep sudo alive for the duration of the script
+keep_sudo_alive() {
+  while true; do
+    $USE_SUDO -n true 2>/dev/null || true
+    sleep 60
+  done &
+  SUDO_KEEPALIVE_PID=$!
+  trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
+}
+keep_sudo_alive
+
+# Detect the original invoking user and their home directory
+ORIG_USER="${SUDO_USER:-$USER}"
+ORIG_HOME="$(getent passwd "$ORIG_USER" | cut -d: -f6 || echo "/home/$ORIG_USER")"
+
+# Helper to ensure commands run as the non-root user
+as_user() {
+  if [ "$(id -u)" -eq 0 ]; then
+    $USE_SUDO -u "$ORIG_USER" -- "$@"
+  else
+    "$@"
+  fi
+}
+
 ########### System Detection ###########
 
 detectPackageManager() {
@@ -84,18 +125,6 @@ promptUserInput() {
   done
 }
 
-promptForSudo() {
-  USE_SUDO=""
-  if [ "$(id -u)" -ne 0 ]; then
-    if command -v sudo >/dev/null; then
-      USE_SUDO="sudo"
-    else
-      echo "Failed to get sudo access. Exiting."
-      exit 1
-    fi
-  fi
-}
-
 ########### Core Install Helpers ###########
 
 install_neovim() {
@@ -103,11 +132,9 @@ install_neovim() {
   case "$ARCH" in
     x86_64) NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" ;;
     aarch64) NVIM_URL="https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.tar.gz" ;;
-    *) echo "No prebuilt Neovim for $ARCH"; exit 1 ;;
   esac
 
   TMP_FILE="/tmp/$(basename "$NVIM_URL")"
-
   curl -fLo "$TMP_FILE" "$NVIM_URL" || { echo "Download failed"; exit 1; }
 
   $USE_SUDO rm -rf /opt/nvim
@@ -119,29 +146,23 @@ install_neovim() {
 prepareDotfiles() {
   echo -e "${BOLD_GREEN}Preparing dotfiles...${NC}"
   REPO_URL="https://github.com/ejagombar/Dotfiles.git"
-  REPO_DIR="Dotfiles"
-  BASE_DIR="$(pwd)"
-  REPO_PATH="${BASE_DIR}/${REPO_DIR}"
-  REPO_PATH=$(realpath -m "$REPO_PATH" 2>/dev/null || echo "$REPO_PATH")
+  REPO_PATH="${ORIG_HOME}/Dotfiles"
 
   if [ -d "${REPO_PATH}/.git" ]; then
     cd "$REPO_PATH" || exit 1
     CURRENT_REMOTE=$(git config --get remote.origin.url)
     if [[ "$CURRENT_REMOTE" == "$REPO_URL" ]]; then
-      echo -e "${GREEN}Dotfiles repo already exists and is valid. Pulling latest...${NC}"
-      git pull --rebase
+      echo -e "${GREEN}Dotfiles repo already exists. Pulling latest...${NC}"
+      as_user git pull --rebase
     else
-      echo -e "${BLUE}Existing directory '$REPO_DIR' is not the expected repo. Backing up...${NC}"
-      cd "$BASE_DIR" || exit 1
-      mv "$REPO_DIR" "${REPO_DIR}_backup_$(date +%s)"
-      git clone "$REPO_URL" "$REPO_PATH"
+      echo -e "${BLUE}Existing directory is not the expected repo. Backing up...${NC}"
+      mv "$REPO_PATH" "${REPO_PATH}_backup_$(date +%s)"
+      as_user git clone "$REPO_URL" "$REPO_PATH"
     fi
   else
     echo -e "${GREEN}Cloning dotfiles repo...${NC}"
-    git clone "$REPO_URL" "$REPO_PATH"
+    as_user git clone "$REPO_URL" "$REPO_PATH"
   fi
-
-  cd "$BASE_DIR" || exit 1
   DOTFILES_PATH="$REPO_PATH"
 }
 
@@ -149,45 +170,33 @@ setupSymlinks() {
   echo -e "${BOLD_GREEN}Setting symlinks...${NC}"
   local cwd="$DOTFILES_PATH"
 
-  mkdir -p "$HOME/.config"
+  mkdir -p "$ORIG_HOME/.config"
 
-  echo -e "${GREEN}Setting tmux symlink${NC}"
-  ln -sf "$cwd/tmux/.tmux.conf" "$HOME/.tmux.conf"
+  ln -sf "$cwd/tmux/.tmux.conf" "$ORIG_HOME/.tmux.conf"
+  ln -sf "$cwd/zsh/.zshrc" "$ORIG_HOME/.zshrc"
+  ln -sf "$cwd/nvim" "$ORIG_HOME/.config/nvim"
+  ln -sf "$cwd/.gitconfig" "$ORIG_HOME/.gitconfig"
+  ln -sf "$cwd/.prettierrc" "$ORIG_HOME/.prettierrc"
 
-  echo -e "${GREEN}Setting zsh symlink${NC}"
-  ln -sf "$cwd/zsh/.zshrc" "$HOME/.zshrc"
-
-  echo -e "${GREEN}Setting nvim symlink${NC}"
-  ln -sf "$cwd/nvim" "$HOME/.config/nvim"
-
-  echo -e "${GREEN}Setting gitconfig symlink${NC}"
-  ln -sf "$cwd/.gitconfig" "$HOME/.gitconfig"
-
-  echo -e "${GREEN}Setting prettier symlink${NC}"
-  ln -sf "$cwd/.prettierrc" "$HOME/.prettierrc"
-
-  echo -e "${BOLD_GREEN}Setting up scripts...${NC}"
-  mkdir -p "$HOME/bin"
-  ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$HOME/bin/tmux-sessioniser"
-  ln -sf "$cwd/scripts/open-github.sh" "$HOME/bin/github"
+  mkdir -p "$ORIG_HOME/bin"
+  ln -sf "$cwd/scripts/tmux-sessioniser.sh" "$ORIG_HOME/bin/tmux-sessioniser"
+  ln -sf "$cwd/scripts/open-github.sh" "$ORIG_HOME/bin/github"
 }
 
 setZshAsDefault() {
   ZSH_PATH=$(command -v zsh)
   if ! grep -q "$ZSH_PATH" /etc/shells; then
-    echo "$ZSH_PATH" | $USE_SUDO tee -a /etc/shells
+    echo "$ZSH_PATH" | $USE_SUDO tee -a /etc/shells >/dev/null
   fi
-  echo -e "${BOLD_GREEN}Setting shell to zsh${NC}"
-  chsh -s "$ZSH_PATH"
+  echo -e "${BOLD_GREEN}Setting default shell to zsh${NC}"
+  as_user chsh -s "$ZSH_PATH" "$ORIG_USER"
 }
 
 ########### Installation Types ###########
 
 installBare() {
-  promptForSudo
   prepareDotfiles
-
-  echo -e "${BOLD_GREEN}Installing bear necessities...${NC}"
+  echo -e "${BOLD_GREEN}Installing essential tools...${NC}"
   ESSENTIALS="tmux zsh curl git"
 
   if [[ ${PKG_MANAGER} == "apt-get" || ${PKG_MANAGER} == "yum" ]]; then
@@ -199,39 +208,35 @@ installBare() {
 
   setupSymlinks
   setZshAsDefault
-
   echo -e "${BOLD_GREEN}Bare installation complete!${NC}"
 }
 
 installFull() {
   installBare
-
-  echo -e "${BOLD_GREEN}Installing additional tools for full setup...${NC}"
+  echo -e "${BOLD_GREEN}Installing additional tools...${NC}"
   ADDITIONAL_PACKAGES="ripgrep fzf unzip fontconfig gh fd-find luarocks make cmake"
-
   $USE_SUDO $INSTALL_CMD $ADDITIONAL_PACKAGES
 
   echo -e "${BOLD_GREEN}Installing Oh My Zsh & plugins${NC}"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
+  as_user sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  as_user git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$ORIG_HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  as_user git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$ORIG_HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  as_user git clone https://github.com/spaceship-prompt/spaceship-prompt.git ${ZSH_CUSTOM:-$ORIG_HOME/.oh-my-zsh/custom}/themes/spaceship-prompt --depth=1
 
   echo -e "${BOLD_GREEN}Installing Tmux TPM${NC}"
-  git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+  as_user git clone https://github.com/tmux-plugins/tpm $ORIG_HOME/.tmux/plugins/tpm
 
   font_name="FiraCode"
   echo -e "${BOLD_GREEN}Installing ${font_name} Nerd Font${NC}"
   TMP_FONT="/tmp/${font_name}.zip"
 
-  echo "Downloading ${font_name} font..."
   curl -fL -o "$TMP_FONT" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font_name}.zip" || {
     echo "Failed to download ${font_name} font"
     exit 1
   }
 
-  mkdir -p "$HOME/.local/share/fonts/${font_name}/"
-  unzip -o "$TMP_FONT" -d "$HOME/.local/share/fonts/${font_name}/"
+  mkdir -p "$ORIG_HOME/.local/share/fonts/${font_name}/"
+  unzip -o "$TMP_FONT" -d "$ORIG_HOME/.local/share/fonts/${font_name}/"
   fc-cache -f
 
   rm -f "$TMP_FONT"
