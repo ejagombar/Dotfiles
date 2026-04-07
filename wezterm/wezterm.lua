@@ -9,6 +9,7 @@ return {
 	enable_tab_bar = false,
 	window_decorations = "TITLE | RESIZE",
 	enable_wayland = false,
+	audible_bell = "Disabled",
 
 	font = wezterm.font("FiraCode Nerd Font"),
 	font_size = 14.0,
