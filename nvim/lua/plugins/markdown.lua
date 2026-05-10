@@ -1,18 +1,13 @@
 return {
-	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-		ft = { "markdown" },
-		build = function()
-			vim.fn["mkdp#util#install"]()
-		end,
-	},
+	"selimacerbas/markdown-preview.nvim",
+	dependencies = { "selimacerbas/live-server.nvim" },
 
-	-- {
-	-- 	"MeanderingProgrammer/render-markdown.nvim",
-	-- 	dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-	-- 	---@module 'render-markdown'
-	-- 	---@type render.md.UserConfig
-	-- 	opts = {},
-	-- },
+	config = function()
+		require("markdown_preview").setup({
+			instance_mode = "takeover",
+			port = 0,
+			open_browser = true,
+			debounce_ms = 300,
+		})
+	end,
 }
