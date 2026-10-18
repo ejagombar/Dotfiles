@@ -15,6 +15,15 @@ return {
 	},
 
 	{
+		"f-person/git-blame.nvim",
+		event = "VeryLazy",
+		opts = { enabled = false },
+		keys = {
+			{ "<leader>gB", "<cmd>GitBlameToggle<cr>", desc = "Toggle git blame" },
+		},
+	},
+
+	{
 		"lewis6991/gitsigns.nvim",
 		config = true,
 		lazy = false,

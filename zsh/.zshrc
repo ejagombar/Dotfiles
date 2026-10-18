@@ -11,6 +11,13 @@ export PATH="$PATH:/usr/local/go/bin:$HOME/go/bin:$GOPATH/bin:/etc/profile.d/mod
 export PATH="$PATH:$HOME/.local/bin:$VCPKG_ROOT:$PYNT_ROOT:$HOME/.cargo/bin:$HOME/bin"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
+# Homebrew on macOS (Apple silicon, then Intel)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 export TERM=xterm-256color
 
 ### Zinit (Plugin Manager) ----------------------
@@ -85,7 +92,7 @@ alias vzrc="nvim ~/.zshrc && exec zsh -l"
 alias szrc="source ~/.zshrc"
 
 alias v='nvim'
-alias open='xdg-open'
+[[ "$OSTYPE" == linux* ]] && alias open='xdg-open'  # macOS has its own open
 alias lg='lazygit'
 alias ts='tmux-sessioniser'
 
@@ -119,4 +126,4 @@ if command -v pyenv > /dev/null 2>&1; then
 fi
 
 # Pi
-export PATH="/home/ejago/.npm-global/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$PATH"

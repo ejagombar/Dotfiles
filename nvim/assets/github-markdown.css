@@ -1,0 +1,157 @@
+/* GitHub markdown styling for mdkite.nvim, layered over its bundled styles.
+   Values follow github-markdown-css (sindresorhus/github-markdown-css). */
+
+:root {
+	--gh-code-bg: rgba(101, 108, 118, .2);
+	--gh-pre-bg: #151b23;
+	--gh-hr: #3d444d;
+}
+
+[data-theme="light"] {
+	--gh-code-bg: rgba(129, 139, 152, .12);
+	--gh-pre-bg: #f6f8fa;
+	--gh-hr: #d1d9e0;
+}
+
+#content {
+	max-width: 1012px;
+	padding: 32px 45px 64px;
+	font-size: 16px;
+	line-height: 1.5;
+	word-wrap: break-word;
+	animation: none;
+}
+
+/* Headings: no coloured accent bars */
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
+	margin: 24px 0 16px;
+	padding-left: 0;
+	border-left: none;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+#content h1 {
+	font-size: 2em;
+	padding-bottom: .3em;
+	border-bottom: 1px solid var(--stroke);
+}
+
+#content h2 {
+	font-size: 1.5em;
+	padding-bottom: .3em;
+	border-bottom: 1px solid var(--stroke);
+}
+
+#content h3 { font-size: 1.25em; }
+#content h4 { font-size: 1em; }
+#content h5 { font-size: .875em; color: var(--fg); }
+#content h6 { font-size: .85em; color: var(--fg-muted); }
+
+#content p,
+#content blockquote,
+#content ul,
+#content ol,
+#content table,
+#content pre,
+#content details {
+	margin: 0 0 16px;
+}
+
+#content a {
+	color: var(--link);
+	text-decoration: underline;
+	text-underline-offset: .2rem;
+}
+
+#content img {
+	border-radius: 0;
+}
+
+#content hr {
+	height: .25em;
+	margin: 24px 0;
+	background: var(--gh-hr);
+}
+
+#content ul ul,
+#content ul ol,
+#content ol ol,
+#content ol ul {
+	margin-bottom: 0;
+}
+
+#content li + li {
+	margin-top: .25em;
+}
+
+#content blockquote {
+	padding: 0 1em;
+	border-left: .25em solid var(--blockquote-border);
+	color: var(--fg-muted);
+}
+
+/* Tables: sized to content, scroll when too wide */
+#content table {
+	display: block;
+	width: max-content;
+	max-width: 100%;
+	overflow: auto;
+	border-spacing: 0;
+	font-size: 1em;
+}
+
+#content th,
+#content td {
+	padding: 6px 13px;
+	border: 1px solid var(--table-border);
+}
+
+#content th {
+	background: transparent;
+	font-weight: 600;
+}
+
+#content tr {
+	background: var(--bg);
+	border-top: 1px solid var(--table-border);
+}
+
+#content tr:nth-child(2n) {
+	background: var(--gh-pre-bg);
+}
+
+/* Code */
+#content code {
+	padding: .2em .4em;
+	margin: 0;
+	font-size: 85%;
+	background: var(--gh-code-bg);
+	border-radius: 6px;
+	font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+#content pre {
+	padding: 16px;
+	font-size: 85%;
+	line-height: 1.45;
+	background: var(--gh-pre-bg);
+	border: none;
+	border-radius: 6px;
+}
+
+#content pre code {
+	padding: 0;
+	font-size: 100%;
+	background: transparent;
+}
+
+#content pre.hljs,
+#content pre code.hljs {
+	background: var(--gh-pre-bg);
+}

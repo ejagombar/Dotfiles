@@ -28,6 +28,24 @@ vim.keymap.set("n", "<leader>rp", ":! ./runcommand")
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
+vim.keymap.set("n", "<leader>fp", function()
+	local path = vim.fn.expand("%:p")
+	vim.fn.setreg("+", path)
+	vim.notify("Copied file path: " .. path)
+end, { desc = "Copy file path" })
+
+local isGitsignsBaseLastCommit = false
+vim.keymap.set("n", "<leader>gb", function()
+	isGitsignsBaseLastCommit = not isGitsignsBaseLastCommit
+	if isGitsignsBaseLastCommit then
+		require("gitsigns").change_base("HEAD~1", true)
+		vim.notify("Gitsigns base: HEAD~1 (showing last commit)")
+	else
+		require("gitsigns").reset_base(true)
+		vim.notify("Gitsigns base: index (normal)")
+	end
+end, { desc = "Toggle gitsigns base between HEAD~1 and index" })
+
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", function()
 	vim.diagnostic.jump({ forward = false })

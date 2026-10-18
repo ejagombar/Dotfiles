@@ -16,10 +16,17 @@ if [[ $url == https://github.com/* ]]; then
   url="${url%.git}"
 fi
 
+# Pick the right opener for the current OS
+if [[ "$OSTYPE" == darwin* ]]; then
+  opener="open"
+else
+  opener="xdg-open"
+fi
+
 # Check if the repository is on GitHub
 if [[ $url == *"github.com"* ]]; then
   echo "Opening: $url"
-  xdg-open $url
+  "$opener" "$url"
 else
   echo "This repository is not hosted on GitHub"
 fi
