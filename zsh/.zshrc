@@ -111,6 +111,31 @@ zle -N fg-widget
 bindkey -M vicmd ^f fg-widget
 bindkey -M viins ^f fg-widget
 
+### LONGSHOT -------
+
+# 1. The command itself
+log() {
+    if [ -z "$1" ]; then
+        echo "Error: Missing container name."
+        echo "Usage: log <container_name>"
+        return 1
+    fi
+    # Added sudo here
+    sudo docker logs -f "$1"
+}
+
+# 2. The autocomplete logic
+_log_autocomplete() {
+    # Added sudo here, and 2>/dev/null to prevent password prompts 
+    # from breaking your terminal visually if you press Tab
+    local containers=($(sudo docker ps --format '{{.Names}}' 2>/dev/null))
+    
+    compadd -a containers
+}
+
+# 3. Bind the autocomplete to the command
+compdef _log_autocomplete log
+
 ### Conditional Starship Fallback -------------------------------------
 
 type starship_zle-keymap-select >/dev/null || {

@@ -6,6 +6,9 @@ local config = function()
 
 	telescope.setup({
 		defaults = {
+			preview = {
+				treesitter = false,
+			},
 			file_ignore_patterns = {
 				"node_modules",
 				"build",
@@ -41,7 +44,6 @@ end
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		-- tag = "0.1.5",
 		lazy = false,
 		config = config,
 		dependencies = {

@@ -46,6 +46,14 @@ vim.opt.inccommand = "split"
 
 vim.opt.textwidth = 0
 
+-- Prevent treesitter range=nil error from telescope buffer lifecycle
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "TelescopePrompt", "TelescopeResults" },
+	callback = function()
+		pcall(vim.treesitter.stop)
+	end,
+})
+
 vim.filetype.add({
 	extension = {
 		vert = "vert",
