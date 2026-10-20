@@ -9,6 +9,14 @@
 curl -sL dots.eagombar.uk | bash
 ```
 
+To install without any prompts (e.g. in a container):
+
+```
+curl -sL dots.eagombar.uk | bash -s -- --yes --full
+```
+
+See `install.sh --help` for the options.
+
 ## Dependencies
 
 - `neovim`
@@ -64,6 +72,7 @@ curl -sL dots.eagombar.uk | bash
 - `luarocks`
 - `gh`
 - `fd-find`
+- `lazygit`
 
 
 # Dotfiles - Small

@@ -3,6 +3,12 @@
 #
 #   curl -sL dots.eagombar.uk | bash
 #
+# To run without any prompts (e.g. in a container), pass options after "bash -s --":
+#
+#   curl -sL dots.eagombar.uk | bash -s -- --yes --full
+#
+# Run with --help to list the options.
+#
 # Works on macOS (Homebrew), Linux and WSL (apt-get, dnf, yum, pacman, apk)
 # and Windows (Git Bash, with winget). Kept compatible with bash 3.2, the
 # version macOS ships with.
@@ -19,6 +25,10 @@ NC="\033[0m"
 
 REPO_URL="https://github.com/ejagombar/Dotfiles.git"
 REPO_SLUG="ejagombar/Dotfiles"
+
+# Set from the command line in parseArgs
+ASSUME_YES=false
+OPTION=""
 
 warn() { echo -e "${YELLOW}Warning:${NC} $*"; }
 die() { echo -e "${RED}Error:${NC} $*" >&2; exit 1; }
@@ -177,6 +187,7 @@ pkg_name() {
     winget:fd) echo "sharkdp.fd" ;;
     winget:gh) echo "GitHub.cli" ;;
     winget:eza) echo "eza-community.eza" ;;
+    winget:lazygit) echo "JesseDuffield.lazygit" ;;
     winget:wezterm) echo "wez.wezterm" ;;
     winget:starship) echo "Starship.Starship" ;;
     *) echo "$1" ;;
@@ -273,6 +284,10 @@ confirmLocation() {
   fi
   echo ""
 
+  if [ "$ASSUME_YES" = true ]; then
+    return 0
+  fi
+
   local answer=""
   read -rp "Continue? [y/N] " answer </dev/tty
   case "$answer" in
@@ -298,6 +313,30 @@ checkSymlinkSupport() {
 
 ########### CLI ###########
 
+printUsage() {
+  echo "Usage: install.sh [--yes] [--bare | --full]"
+  echo ""
+  echo "  -y, --yes   Don't ask before using the dotfiles location"
+  echo "  --bare      Bare install, without asking"
+  echo "  --full      Full install, without asking"
+  echo "  -h, --help  Show this help"
+  echo ""
+  echo "With no options, the script asks for each choice."
+}
+
+parseArgs() {
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -y|--yes) ASSUME_YES=true ;;
+      --bare) OPTION="bare" ;;
+      --full) OPTION="full" ;;
+      -h|--help) printUsage; printHelp; exit 0 ;;
+      *) die "Unknown option: $1 (see --help)" ;;
+    esac
+    shift
+  done
+}
+
 printHelp() {
   echo -e "\n${BLUE}===== HELP =====${NC}"
   echo -e "\n${BOLD}Bare Install:${NC}"
@@ -308,9 +347,9 @@ printHelp() {
   fi
   echo -e "${BOLD}Full Install:${NC} everything in Bare, plus"
   case "$OS" in
-    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n luarocks\n cmake\n wezterm\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
-    linux) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n luarocks\n make\n cmake\n unzip\n fontconfig\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
-    windows) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n wezterm\n starship\n" ;;
+    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n luarocks\n cmake\n wezterm\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
+    linux) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n luarocks\n make\n cmake\n unzip\n fontconfig\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
+    windows) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n wezterm\n starship\n" ;;
   esac
   echo -e "${BOLD}Both link these configs:${NC}"
   echo -e " neovim, zsh, starship, wezterm, tmux, git, prettier, ~/bin scripts\n"
@@ -374,6 +413,28 @@ install_neovim_linux() {
   $USE_SUDO tar -C /opt -xzf "$TMP_FILE"
   $USE_SUDO ln -sf /opt/nvim-linux*/bin/nvim /usr/bin/nvim
   rm -f "$TMP_FILE"
+}
+
+# Linux only: many distros don't package lazygit (Ubuntu 24.04 for one), so use the official release
+install_lazygit_linux() {
+  echo "Installing lazygit"
+  local lg_arch latest version tmp status
+  case "$ARCH" in
+    x86_64) lg_arch="x86_64" ;;
+    aarch64) lg_arch="arm64" ;;
+  esac
+
+  # releases/latest redirects to the newest tag, e.g. .../releases/tag/v0.66.2
+  latest="$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/jesseduffield/lazygit/releases/latest)" || return 1
+  version="${latest##*/v}"
+
+  tmp="$(mktemp -d)"
+  curl -fL "https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${lg_arch}.tar.gz" |
+    tar -xz -C "$tmp" lazygit &&
+    $USE_SUDO install -m 755 "$tmp/lazygit" /usr/local/bin/lazygit
+  status=$?
+  rm -rf "$tmp"
+  return $status
 }
 
 clone_dotfiles() {
@@ -576,12 +637,17 @@ installFull() {
 
   case "$OS" in
     # unzip and make come with macOS / Xcode Command Line Tools; fontconfig is not needed
-    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza luarocks cmake wezterm" ;;
+    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit luarocks cmake wezterm" ;;
     linux) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza luarocks make cmake unzip fontconfig" ;;
-    windows) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza wezterm starship" ;;
+    windows) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit wezterm starship" ;;
   esac
   # shellcheck disable=SC2086
   pkg_try $ADDITIONAL_PACKAGES
+
+  if [ "$OS" = "linux" ] && ! install_lazygit_linux; then
+    warn "Could not install lazygit, skipping."
+    FAILED_PKGS="$FAILED_PKGS lazygit"
+  fi
 
   if [ "$OS" != "windows" ]; then
     echo -e "${BOLD_GREEN}Installing Tmux TPM${NC}"
@@ -595,23 +661,21 @@ installFull() {
 ########### Main ###########
 
 performCommands() {
-  OPTION=""
+  # --bare or --full chose already; otherwise ask until we get one of them
   while [[ ! ( "$OPTION" == "bare" || "$OPTION" == "full" ) ]]; do
     promptUserInput
-    case "$OPTION" in
-      help) printHelp ;;
-      bare|full)
-        setupPrivileges
-        ensureBrew
-        if [ "$OPTION" = "bare" ]; then installBare; else installFull; fi
-        printNotes
-        ;;
-    esac
+    if [ "$OPTION" = "help" ]; then printHelp; fi
   done
+
+  setupPrivileges
+  ensureBrew
+  if [ "$OPTION" = "bare" ]; then installBare; else installFull; fi
+  printNotes
   echo -e "\n${GREEN}Exiting.${NC}"
 }
 
 main() {
+  parseArgs "$@"
   detectArch
   detectPackageManager
   resolveDotfilesPath
