@@ -19,10 +19,14 @@ fi
 # [other machine] Specific to another machine: move these to its ~/.zshrc.local
 # [other machine] export LC_ALL="en_IN.UTF-8"  # commented out: would override en_GB above
 # [other machine] export LANG="en_IN.UTF-8"
+# [other machine] Specific to another machine: move these to its ~/.zshrc.local
+# [other machine] alias lg='lazygit'  # commented out: would shadow the lg CLI (~/go/bin/lg)
 export VCPKG_ROOT="$HOME/Repos/Forks/vcpkg"                          # [other machine]
 export PYNT_ROOT="$HOME/.local/lib/python3.12/site-packages"         # [other machine]
 export PATH="$PATH:$VCPKG_ROOT:$PYNT_ROOT:/etc/profile.d/modules.sh" # [other machine]
 export PATH="$HOME/.npm-global/bin:$PATH"                            # [other machine] Pi
+alias build_explorer='cd ~/Repos/Projects/WikiMapper && cmake --build build --parallel && cd build && ./WikiMapperExplorer' # [other machine]
+alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd build && ./OpenGLTutorial'   # [other machine]
 
 export TERM=xterm-256color
 
@@ -109,13 +113,7 @@ alias szrc="source ~/.zshrc"
 
 alias v='nvim'
 [[ "$OSTYPE" == linux* ]] && alias open='xdg-open'  # macOS has its own open
-alias lgit='lazygit'
 alias ts='tmux-sessioniser'
-
-# [other machine] Specific to another machine: move these to its ~/.zshrc.local
-# [other machine] alias lg='lazygit'  # commented out: would shadow the lg CLI (~/go/bin/lg)
-alias build_explorer='cd ~/Repos/Projects/WikiMapper && cmake --build build --parallel && cd build && ./WikiMapperExplorer' # [other machine]
-alias build_opengl_tutorial='cd ~/Repos/Projects/OpenGLTutorial && cmake --build build && cd build && ./OpenGLTutorial'   # [other machine]
 
 ### Keybindings ------------------------------------------
 
@@ -128,31 +126,6 @@ fg-widget() {
 zle -N fg-widget
 bindkey -M vicmd ^f fg-widget
 bindkey -M viins ^f fg-widget
-
-### LONGSHOT -------
-
-# 1. The command itself
-log() {
-    if [ -z "$1" ]; then
-        echo "Error: Missing container name."
-        echo "Usage: log <container_name>"
-        return 1
-    fi
-    # Added sudo here
-    sudo docker logs -f "$1"
-}
-
-# 2. The autocomplete logic
-_log_autocomplete() {
-    # Added sudo here, and 2>/dev/null to prevent password prompts
-    # from breaking your terminal visually if you press Tab
-    local containers=($(sudo docker ps --format '{{.Names}}' 2>/dev/null))
-
-    compadd -a containers
-}
-
-# 3. Bind the autocomplete to the command
-compdef _log_autocomplete log
 
 ### Conditional Starship Fallback -------------------------------------
 
