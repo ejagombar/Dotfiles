@@ -1,0 +1,17 @@
+# Linked into place by install.sh. Docs: https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
+git:
+  # Press | in lazygit to cycle through these
+  diffRenderers:
+    # Side by side when the view is wide enough (press + to enlarge it), unified otherwise.
+    # Click a line number to open that line in the editor.
+    - name: delta
+      command: >-
+        delta --{{colorScheme}} --paging=never --line-numbers --width={{width}}
+        {{if gt .width 160}}--side-by-side{{end}}
+        --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+    # Structural diff that ignores formatting-only changes
+    - name: difftastic
+      type: extDiff
+      command: difft --color=always --background={{colorScheme}} --context={{diffContext}} --width={{width}}
+    - name: default
+      type: rawGit

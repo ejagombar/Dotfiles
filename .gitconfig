@@ -1,6 +1,6 @@
 [user]
 	email = 77460324+ejagombar@users.noreply.github.com
-	name = Edward Agombar
+	name = Ed Agombar
 [pager]
 	branch = false
 [column]
@@ -37,5 +37,7 @@
         autoSquash = true
         autoStash = true
         updateRefs = true
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
 [pull]
 	rebase = true

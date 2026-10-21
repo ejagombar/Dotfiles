@@ -181,13 +181,16 @@ pkg_name() {
   case "$PKG_MANAGER:$1" in
     apt-get:fd|dnf:fd|yum:fd) echo "fd-find" ;;
     brew:wezterm) echo "--cask wezterm" ;;
+    brew:delta|apt-get:delta|dnf:delta|yum:delta|pacman:delta) echo "git-delta" ;;
+    winget:lazygit) echo "JesseDuffield.lazygit" ;;
+    winget:delta) echo "dandavison.delta" ;;
+    winget:difftastic) echo "Wilfred.difftastic" ;;
     winget:neovim) echo "Neovim.Neovim" ;;
     winget:ripgrep) echo "BurntSushi.ripgrep.MSVC" ;;
     winget:fzf) echo "junegunn.fzf" ;;
     winget:fd) echo "sharkdp.fd" ;;
     winget:gh) echo "GitHub.cli" ;;
     winget:eza) echo "eza-community.eza" ;;
-    winget:lazygit) echo "JesseDuffield.lazygit" ;;
     winget:wezterm) echo "wez.wezterm" ;;
     winget:starship) echo "Starship.Starship" ;;
     *) echo "$1" ;;
@@ -347,12 +350,12 @@ printHelp() {
   fi
   echo -e "${BOLD}Full Install:${NC} everything in Bare, plus"
   case "$OS" in
-    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n luarocks\n cmake\n wezterm\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
-    linux) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n luarocks\n make\n cmake\n unzip\n fontconfig\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
-    windows) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n wezterm\n starship\n" ;;
+    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n luarocks\n cmake\n wezterm\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
+    linux) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n luarocks\n make\n cmake\n unzip\n fontconfig\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
+    windows) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n wezterm\n starship\n" ;;
   esac
   echo -e "${BOLD}Both link these configs:${NC}"
-  echo -e " neovim, zsh, starship, wezterm, tmux, git, prettier, ~/bin scripts\n"
+  echo -e " neovim, zsh, starship, wezterm, tmux, git, lazygit, prettier, ~/bin scripts\n"
 }
 
 printBanner() {
@@ -504,17 +507,28 @@ link() {
 
 setupSymlinks() {
   echo -e "${BOLD_GREEN}Setting symlinks...${NC}"
-  local repo="$DOTFILES_PATH" config="$ORIG_HOME/.config" nvim_dir
+  local repo="$DOTFILES_PATH" config="$ORIG_HOME/.config" nvim_dir lazygit_dir
 
   # Neovim reads %LOCALAPPDATA%\nvim on Windows and ~/.config/nvim elsewhere.
+  # Lazygit reads %APPDATA%\lazygit on Windows and ~/Library/Application Support on macOS.
   # WezTerm and starship read ~/.config on every OS.
-  if [ "$OS" = "windows" ]; then
-    nvim_dir="$(cygpath -u "${LOCALAPPDATA:-$ORIG_HOME/AppData/Local}")/nvim"
-  else
-    nvim_dir="$config/nvim"
-  fi
+  case "$OS" in
+    windows)
+      nvim_dir="$(cygpath -u "${LOCALAPPDATA:-$ORIG_HOME/AppData/Local}")/nvim"
+      lazygit_dir="$(cygpath -u "${APPDATA:-$ORIG_HOME/AppData/Roaming}")/lazygit"
+      ;;
+    macos)
+      nvim_dir="$config/nvim"
+      lazygit_dir="$ORIG_HOME/Library/Application Support/lazygit"
+      ;;
+    *)
+      nvim_dir="$config/nvim"
+      lazygit_dir="$config/lazygit"
+      ;;
+  esac
 
   link "$repo/nvim" "$nvim_dir"
+  link "$repo/lazygit/config.yml" "$lazygit_dir/config.yml"
   link "$repo/zsh/.zshrc" "$ORIG_HOME/.zshrc"
   link "$repo/zsh/starship.toml" "$config/starship.toml"
   link "$repo/wezterm/wezterm.lua" "$config/wezterm/wezterm.lua"
@@ -637,9 +651,9 @@ installFull() {
 
   case "$OS" in
     # unzip and make come with macOS / Xcode Command Line Tools; fontconfig is not needed
-    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit luarocks cmake wezterm" ;;
-    linux) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza luarocks make cmake unzip fontconfig" ;;
-    windows) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit wezterm starship" ;;
+    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit delta difftastic luarocks cmake wezterm" ;;
+    linux) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza delta difftastic luarocks make cmake unzip fontconfig" ;;
+    windows) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit delta difftastic wezterm starship" ;;
   esac
   # shellcheck disable=SC2086
   pkg_try $ADDITIONAL_PACKAGES

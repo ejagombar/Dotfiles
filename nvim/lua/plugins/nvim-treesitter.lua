@@ -47,7 +47,6 @@ return { -- Highlight, edit, and navigate code
 			end,
 		})
 
-		-- UNCHANGED
 		require("nvim-ts-autotag").setup({
 			opts = {
 				enable_close = true,

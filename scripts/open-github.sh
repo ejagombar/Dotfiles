@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# github pr: open the current branch's pull request
+if [[ $1 == pr ]]; then
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "gh is not installed: brew install gh"
+    exit 1
+  fi
+  # drop GH_TOKEN as the gh() wrapper in .zshrc does: a script cannot see that zsh function
+  exec env -u GH_TOKEN gh pr view --web
+fi
+
 # Get the remote URL
 url=$(git remote get-url origin)
 

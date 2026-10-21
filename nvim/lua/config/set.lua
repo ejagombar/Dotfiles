@@ -44,6 +44,18 @@ vim.g.loaded_perl_provider = false -- disable warning in :checkhealth
 
 vim.opt.inccommand = "split"
 
+-- Side-by-side diffs using the same algorithm as git, with better line pairing
+vim.opt.diffopt = {
+	"internal",
+	"filler",
+	"closeoff",
+	"indent-heuristic",
+	"inline:char",
+	"linematch:60",
+	"algorithm:histogram",
+	"vertical",
+}
+
 vim.opt.textwidth = 0
 
 -- Prevent treesitter range=nil error from telescope buffer lifecycle
