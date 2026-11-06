@@ -1,24 +1,31 @@
 name: Deploy to Server
 
+# dots.eagombar.uk serves a single file, install.sh ("curl -sL dots.eagombar.uk | bash").
+# install.sh clones everything else it needs from GitHub, so only that one file is
+# uploaded: the rest of the repo, including .git, never goes on the web server.
+
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Run deploy commands on server
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: eagombar.uk
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd /var/www/dots
-            git pull
-            sudo nginx -s reload
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      # nginx serves the new file straight away; no reload needed.
+      - name: Deploy install.sh
+        run: |
+          rsync -avz \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new" \
+            install.sh ${{ secrets.SERVER_USER }}@eagombar.uk:/var/www/dots.eagombar.uk/
