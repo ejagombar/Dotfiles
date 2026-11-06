@@ -537,6 +537,7 @@ setupSymlinks() {
   link "$repo/.prettierrc" "$ORIG_HOME/.prettierrc"
   link "$repo/scripts/tmux-sessioniser.sh" "$ORIG_HOME/bin/tmux-sessioniser"
   link "$repo/scripts/open-github.sh" "$ORIG_HOME/bin/github"
+  link "$repo/scripts/open-url.sh" "$ORIG_HOME/bin/open-url"
 
   if [ -e "$ORIG_HOME/.wezterm.lua" ]; then
     warn "~/.wezterm.lua exists and may be loaded instead of ~/.config/wezterm/wezterm.lua. Remove it to use the dotfiles config."

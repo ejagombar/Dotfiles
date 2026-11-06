@@ -1,16 +1,30 @@
 return {
 	"stevearc/oil.nvim",
 	config = function()
-		require("oil").setup({
+		local oil = require("oil")
+		local detail = false
+
+		oil.setup({
 			columns = {
 				"icon",
-				-- "permissions",
-				-- "size",
-				-- "mtime",
 			},
 			view_options = {
 				-- Show files and directories that start with "."
 				show_hidden = true,
+			},
+			keymaps = {
+				-- Toggle an `ls -alh` style view
+				["gd"] = {
+					desc = "Toggle file detail view",
+					callback = function()
+						detail = not detail
+						if detail then
+							oil.set_columns({ "permissions", "size", { "mtime", format = "%b %d %H:%M" }, "icon" })
+						else
+							oil.set_columns({ "icon" })
+						end
+					end,
+				},
 			},
 		})
 		vim.keymap.set("n", "<leader>pe", "<CMD>Oil --float<CR>", { desc = "Open parent directory" })
