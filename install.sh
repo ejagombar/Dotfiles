@@ -181,6 +181,7 @@ pkg_name() {
   case "$PKG_MANAGER:$1" in
     apt-get:fd|dnf:fd|yum:fd) echo "fd-find" ;;
     brew:wezterm) echo "--cask wezterm" ;;
+    brew:sketchybar) echo "FelixKratz/formulae/sketchybar" ;;
     brew:delta|apt-get:delta|dnf:delta|yum:delta|pacman:delta) echo "git-delta" ;;
     winget:lazygit) echo "JesseDuffield.lazygit" ;;
     winget:delta) echo "dandavison.delta" ;;
@@ -350,12 +351,12 @@ printHelp() {
   fi
   echo -e "${BOLD}Full Install:${NC} everything in Bare, plus"
   case "$OS" in
-    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n luarocks\n cmake\n wezterm\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
+    macos) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n luarocks\n cmake\n wezterm\n sketchybar\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
     linux) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n luarocks\n make\n cmake\n unzip\n fontconfig\n tmux plugin manager (tpm)\n FiraCode Nerd Font\n" ;;
     windows) echo -e " ripgrep\n fzf\n gh\n fd\n eza\n lazygit\n delta\n difftastic\n wezterm\n starship\n" ;;
   esac
   echo -e "${BOLD}Both link these configs:${NC}"
-  echo -e " neovim, zsh, starship, wezterm, tmux, git, lazygit, prettier, ~/bin scripts\n"
+  echo -e " neovim, zsh, starship, wezterm, tmux, git, lazygit, prettier, ~/bin scripts, sketchybar (macOS)\n"
 }
 
 printBanner() {
@@ -538,6 +539,9 @@ setupSymlinks() {
   link "$repo/scripts/tmux-sessioniser.sh" "$ORIG_HOME/bin/tmux-sessioniser"
   link "$repo/scripts/open-github.sh" "$ORIG_HOME/bin/github"
   link "$repo/scripts/open-url.sh" "$ORIG_HOME/bin/open-url"
+  if [ "$OS" = "macos" ]; then
+    link "$repo/sketchybar" "$config/sketchybar"
+  fi
 
   if [ -e "$ORIG_HOME/.wezterm.lua" ]; then
     warn "~/.wezterm.lua exists and may be loaded instead of ~/.config/wezterm/wezterm.lua. Remove it to use the dotfiles config."
@@ -603,6 +607,10 @@ printNotes() {
     echo " - Open a new terminal. zinit installs the zsh plugins and starship the first time zsh starts."
     echo " - In tmux, press prefix + I to install the tmux plugins."
   fi
+  if [ "$OS" = "macos" ]; then
+    echo " - Run 'brew services start sketchybar' to start the status bar, and set the macOS"
+    echo "   menu bar to always auto-hide (System Settings > Menu Bar)."
+  fi
   if [ "$OS" = "linux" ]; then
     if [ "$IS_WSL" = true ]; then
       echo " - WezTerm runs on the Windows side, so run this script in Git Bash too to link its config."
@@ -652,7 +660,7 @@ installFull() {
 
   case "$OS" in
     # unzip and make come with macOS / Xcode Command Line Tools; fontconfig is not needed
-    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit delta difftastic luarocks cmake wezterm" ;;
+    macos) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit delta difftastic luarocks cmake wezterm sketchybar" ;;
     linux) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza delta difftastic luarocks make cmake unzip fontconfig" ;;
     windows) ADDITIONAL_PACKAGES="ripgrep fzf gh fd eza lazygit delta difftastic wezterm starship" ;;
   esac

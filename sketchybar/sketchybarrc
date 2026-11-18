@@ -1,0 +1,115 @@
+#!/bin/bash
+# Status bar for the built-in display only. The macOS menu bar is set to
+# auto-hide, and the built-in display keeps the camera notch row reserved
+# anyway, so the bar fills that row without taking space from windows.
+# Nothing goes in the centre, as the notch would cover it.
+
+source "$CONFIG_DIR/colors.sh"
+PLUGINS="$CONFIG_DIR/plugins"
+FONT="FiraCode Nerd Font"
+
+# display=main is the built-in display while the lid is open; plugins/display.sh
+# hides the bar when it's closed. height matches the notch row (screen height
+# minus the usable height).
+sketchybar --bar position=top \
+                 display=main \
+                 height=38 \
+                 color=0x00000000 \
+                 padding_left=10 \
+                 padding_right=10 \
+                 sticky=on
+
+sketchybar --default icon.font="$FONT:Bold:15.0" \
+                     icon.color=$FG \
+                     label.font="$FONT:SemiBold:13.0" \
+                     label.color=$FG \
+                     padding_left=5 \
+                     padding_right=5 \
+                     icon.padding_left=4 \
+                     icon.padding_right=4 \
+                     label.padding_left=4 \
+                     label.padding_right=4
+
+# Invisible item that shows or hides the whole bar as displays come and go
+sketchybar --add item displays left \
+           --subscribe displays display_change system_woke \
+           --set displays drawing=off \
+                          script="$PLUGINS/display.sh"
+
+########### Left: AeroSpace workspaces and the focused app ###########
+
+# AeroSpace triggers this from exec-on-workspace-change in ~/.aerospace.toml
+sketchybar --add event aerospace_workspace_change
+
+for sid in $(aerospace list-workspaces --all); do
+  sketchybar --add item space.$sid left \
+             --subscribe space.$sid aerospace_workspace_change \
+             --set space.$sid icon="$sid" \
+                              icon.padding_left=8 \
+                              icon.padding_right=8 \
+                              label.drawing=off \
+                              padding_left=1 \
+                              padding_right=1 \
+                              background.color=$HIGHLIGHT \
+                              background.corner_radius=6 \
+                              background.height=24 \
+                              background.drawing=off \
+                              click_script="aerospace workspace $sid" \
+                              script="$PLUGINS/aerospace.sh $sid"
+done
+
+sketchybar --add item front_app left \
+           --subscribe front_app front_app_switched \
+           --set front_app icon.drawing=off \
+                           label.color=$BLUE \
+                           padding_left=12 \
+                           script="$PLUGINS/front_app.sh"
+
+########### Right: listed right to left ###########
+
+sketchybar --add item clock right \
+           --set clock icon.drawing=off \
+                       update_freq=10 \
+                       script="$PLUGINS/clock.sh"
+
+# Click the speaker to slide out a volume slider beside it. It slides back once
+# the mouse leaves the bar. Not a dropdown popup: SketchyBar only draws those on
+# the display with keyboard focus, which usually isn't the built-in one.
+sketchybar --add item volume right \
+           --subscribe volume volume_change mouse.clicked mouse.exited.global \
+           --set volume script="$PLUGINS/volume.sh"
+
+# Zero width hides the slider. The knob's font must be set before the knob
+# itself, or it renders as "?".
+sketchybar --add slider volume_slider right 0 \
+           --subscribe volume_slider mouse.clicked \
+           --set volume_slider padding_left=0 \
+                               padding_right=0 \
+                               slider.knob.drawing=off \
+                               slider.highlight_color=$BLUE \
+                               slider.background.height=5 \
+                               slider.background.corner_radius=3 \
+                               slider.background.color=$HIGHLIGHT \
+                               slider.knob.font="$FONT:Bold:14.0" \
+                               slider.knob.color=$FG \
+                               slider.knob="●" \
+                               script="$PLUGINS/volume.sh"
+
+sketchybar --add item wifi right \
+           --subscribe wifi wifi_change system_woke \
+           --set wifi label.drawing=off \
+                      script="$PLUGINS/wifi.sh" \
+                      click_script="open 'x-apple.systempreferences:com.apple.wifi-settings-extension'"
+
+# Spotify posts this notification whenever playback starts, pauses or changes track
+sketchybar --add event spotify_change com.spotify.client.PlaybackStateChanged
+sketchybar --add item spotify right \
+           --subscribe spotify spotify_change \
+           --set spotify icon=$'\xef\x86\xbc' \
+                         label.max_chars=40 \
+                         drawing=off \
+                         padding_right=12 \
+                         script="$PLUGINS/spotify.sh" \
+                         click_script="osascript -e 'tell application \"Spotify\" to playpause'"
+
+sketchybar --update
