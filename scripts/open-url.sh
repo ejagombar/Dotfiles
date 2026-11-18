@@ -21,6 +21,16 @@ while :; do
   url=${url%?}
 done
 
+closers=
+for (( i = 0; i < ${#url}; i++ )); do
+  case ${url:i:1} in
+    '(') closers=")$closers" ;;
+    '[') closers="]$closers" ;;
+    ')' | ']') closers=${closers#?} ;;
+  esac
+done
+url+=$closers
+
 # Pick the right opener for the current OS
 if [[ $OSTYPE == darwin* ]]; then
   opener=open

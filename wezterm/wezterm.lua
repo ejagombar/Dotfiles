@@ -7,7 +7,7 @@ end)
 return {
 	color_scheme = "One Dark (Gogh)",
 	enable_tab_bar = false,
-	window_decorations = "TITLE | RESIZE",
+	window_decorations = "RESIZE",
 	enable_wayland = false,
 	audible_bell = "Disabled",
 
